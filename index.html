@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hyperoperational Growth Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a0000, #330000, #4d0000);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff6b6b;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(220, 20, 60, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(178, 34, 34, 0.1) 0%, transparent 50%);
+            animation: pulse 10s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            background: rgba(40, 0, 0, 0.8);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 50px rgba(255, 0, 0, 0.3),
+                inset 0 0 30px rgba(139, 0, 0, 0.2);
+            border: 2px solid rgba(255, 0, 0, 0.3);
+            max-width: 90%;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff0000, #ff6b6b, #ff1744);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .stage-indicator {
+            font-size: 1.2rem;
+            color: #ff9999;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
+
+        .number-display {
+            font-size: 2rem;
+            color: #ff3333;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.2), rgba(255, 0, 0, 0.1));
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            word-break: break-all;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .number-display::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0000, transparent, #ff0000);
+            border-radius: 10px;
+            opacity: 0;
+            animation: borderGlow 3s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.5; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-box {
+            padding: 1rem;
+            background: rgba(139, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #ff9999;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(139, 0, 0, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b0000, #ff0000, #ff6b6b);
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .controls {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        button {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+            background: linear-gradient(135deg, #dc143c, #ff0000);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .notation-info {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #ff9999;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hyperoperational Growth Visualizer</h1>
+        
+        <div class="stage-indicator" id="stage">Stage: Exponential</div>
+        
+        <div class="number-display" id="display">3</div>
+        
+        <div class="notation-info" id="notation">Standard Notation</div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Growth Rate</div>
+                <div class="stat-value" id="growthRate">Exponential</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Iterations</div>
+                <div class="stat-value" id="iterations">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Arrow Count</div>
+                <div class="stat-value" id="arrows">N/A</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn">Start Growth</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="resetBtn">Reset</button>
+        </div>
+    </div>
+
+    <!-- Include ExpantaNum library -->
+    <script src="path/to/ExpantaNum.js"></script>
+    
+    <script>
+        // Initialize ExpantaNum - fallback if library not loaded
+        if (typeof ExpantaNum === 'undefined') {
+            console.warn('ExpantaNum not loaded, using simulation mode');
+            // Simulation class for demonstration
+            class ExpantaNum {
+                constructor(value) {
+                    this.value = value;
+                    this.array = [0, 0, 0];
+                    if (typeof value === 'string') {
+                        this.parseString(value);
+                    } else if (typeof value === 'number') {
+                        this.array[0] = Math.log10(Math.max(1, value));
+                    }
+                }
+                
+                parseString(str) {
+                    // Simple parsing for demonstration
+                    if (str.includes('e')) {
+                        const parts = str.split('e');
+                        this.array[0] = parseFloat(parts[1]) || 0;
+                    }
+                }
+                
+                static tetr(base, height) {
+                    return new ExpantaNum(`1e${Math.pow(10, height)}`);
+                }
+                
+                static pent(base, height) {
+                    return new ExpantaNum(`1e${Math.pow(10, height * 10)}`);
+                }
+                
+                static arrow(base, arrows, height) {
+                    return new ExpantaNum(`1e${Math.pow(10, arrows * height)}`);
+                }
+                
+                toString() {
+                    if (this.array[0] < 6) {
+                        return Math.pow(10, this.array[0]).toExponential(2);
+                    }
+                    return `e${this.array[0].toExponential(2)}`;
+                }
+                
+                gt(other) {
+                    return this.array[0] > (other.array ? other.array[0] : other);
+                }
+            }
+        }
+
+        // Global variables
+        let currentNumber = new ExpantaNum(3);
+        let stage = 'exponential';
+        let iterations = 0;
+        let isRunning = false;
+        let animationId = null;
+        let arrowCount = 0;
+        let stageProgress = 0;
+
+        // Stage thresholds
+        const stages = {
+            exponential: { threshold: 33, next: 'tetrational' },
+            tetrational: { threshold: 10000, next: 'pentrational' },
+            pentrational: { threshold: 100000, next: 'hyperoperational' },
+            hyperoperational: { threshold: Infinity, next: null }
+        };
+
+        // Update display
+        function updateDisplay() {
+            const display = document.getElementById('display');
+            const stageEl = document.getElementById('stage');
+            const iterEl = document.getElementById('iterations');
+            const growthEl = document.getElementById('growthRate');
+            const arrowsEl = document.getElementById('arrows');
+            const notationEl = document.getElementById('notation');
+            const progressEl = document.getElementById('progress');
+            
+            // Format number for display
+            let displayText = currentNumber.toString();
+            
+            // Update stage indicator
+            let stageText = stage.charAt(0).toUpperCase() + stage.slice(1);
+            stageEl.textContent = `Stage: ${stageText}`;
+            
+            // Update stats
+            iterEl.textContent = iterations;
+            growthEl.textContent = stageText;
+            
+            if (stage === 'hyperoperational') {
+                arrowsEl.textContent = arrowCount;
+                notationEl.textContent = `Arrow Notation (${arrowCount} arrows)`;
+            } else if (stage === 'pentrational') {
+                arrowsEl.textContent = 'Pre-Arrow';
+                notationEl.textContent = 'Pentation Notation';
+            } else if (stage === 'tetrational') {
+                arrowsEl.textContent = 'Pre-Arrow';
+                notationEl.textContent = 'Tetration Notation';
+            } else {
+                arrowsEl.textContent = 'N/A';
+                notationEl.textContent = 'Scientific Notation';
+            }
+            
+            // Update display with formatted number
+            display.textContent = displayText;
+            
+            // Update progress bar
+            progressEl.style.width = `${Math.min(stageProgress, 100)}%`;
+        }
+
+        // Growth function
+        function grow() {
+            if (!isRunning) return;
+            
+            iterations++;
+            stageProgress = (iterations % 100);
+            
+            switch(stage) {
+                case 'exponential':
+                    // Exponential growth
+                    currentNumber = new ExpantaNum(Math.pow(3, iterations));
+                    
+                    // Check for stage transition at 1e33
+                    if (iterations > 33) {
+                        stage = 'tetrational';
+                        currentNumber = new ExpantaNum('1e33');
+                    }
+                    break;
+                    
+                case 'tetrational':
+                    // Tetrational growth starting from 1e33
+                    const tetrHeight = (iterations - 33) * 0.1;
+                    currentNumber = ExpantaNum.tetr(10, 33 + tetrHeight);
+                    
+                    // Transition to pentrational
+                    if (iterations > 100) {
+                        stage = 'pentrational';
+                    }
+                    break;
+                    
+                case 'pentrational':
+                    // Pentrational growth starting from (10^)^10 10000
+                    const pentHeight = (iterations - 100) * 0.05;
+                    currentNumber = ExpantaNum.pent(10, 10000 + pentHeight);
+                    
+                    // Transition to hyperoperational
+                    if (iterations > 200) {
+                        stage = 'hyperoperational';
+                        arrowCount = 10;
+                    }
+                    break;
+                    
+                case 'hyperoperational':
+                    // Hyperoperational with exponentially increasing arrows
+                    arrowCount = Math.floor(10 * Math.pow(1.1, (iterations - 200) * 0.1));
+                    const hyperHeight = iterations - 200;
+                    currentNumber = ExpantaNum.arrow(10, arrowCount, hyperHeight);
+                    break;
+            }
+            
+            updateDisplay();
+            
+            // Continue animation
+            animationId = requestAnimationFrame(() => {
+                setTimeout(grow, 100); // Update every 100ms for visibility
+            });
+        }
+
+        // Control functions
+        function start() {
+            if (!isRunning) {
+                isRunning = true;
+                document.getElementById('startBtn').textContent = 'Resume';
+                grow();
+            }
+        }
+
+        function pause() {
+            isRunning = false;
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        function reset() {
+            pause();
+            currentNumber = new ExpantaNum(3);
+            stage = 'exponential';
+            iterations = 0;
+            arrowCount = 0;
+            stageProgress = 0;
+            document.getElementById('startBtn').textContent = 'Start Growth';
+            updateDisplay();
+        }
+
+        // Event listeners
+        document.getElementById('startBtn').addEventListener('click', start);
+        document.getElementById('pauseBtn').addEventListener('click', pause);
+        document.getElementById('resetBtn').addEventListener('click', reset);
+
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>
