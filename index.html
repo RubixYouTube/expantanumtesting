@@ -15,26 +15,22 @@
             font-family: 'Courier New', monospace;
             background: linear-gradient(135deg, #1a0000, #330000, #4d0000);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
             color: #ff6b6b;
-            overflow: hidden;
+            padding: 2rem 0;
         }
 
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             background: 
                 radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(220, 20, 60, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 20%, rgba(178, 34, 34, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 80% 80%, rgba(220, 20, 60, 0.1) 0%, transparent 50%);
             animation: pulse 10s infinite;
+            pointer-events: none;
         }
 
         @keyframes pulse {
@@ -42,18 +38,22 @@
             50% { opacity: 1; }
         }
 
-        .container {
-            text-align: center;
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            position: relative;
             z-index: 1;
-            background: rgba(40, 0, 0, 0.8);
-            padding: 3rem;
+        }
+
+        .container {
+            background: rgba(40, 0, 0, 0.9);
+            padding: 2rem;
             border-radius: 20px;
-            box-shadow: 
-                0 0 50px rgba(255, 0, 0, 0.3),
-                inset 0 0 30px rgba(139, 0, 0, 0.2);
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
             border: 2px solid rgba(255, 0, 0, 0.3);
-            max-width: 90%;
             backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
         }
 
         h1 {
@@ -63,7 +63,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 2rem;
-            text-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            text-align: center;
             animation: glow 2s ease-in-out infinite;
         }
 
@@ -72,17 +72,71 @@
             50% { filter: brightness(1.2); }
         }
 
+        .controls-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-group {
+            background: rgba(139, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 0, 0, 0.2);
+        }
+
+        .control-label {
+            color: #ff9999;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="number"], input[type="range"], select {
+            width: 100%;
+            padding: 0.5rem;
+            background: rgba(40, 0, 0, 0.8);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 5px;
+            color: #ff6b6b;
+            font-family: inherit;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 6px;
+            background: rgba(139, 0, 0, 0.3);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .speed-display {
+            color: #ff4444;
+            margin-top: 0.5rem;
+            font-weight: bold;
+        }
+
         .stage-indicator {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             color: #ff9999;
             margin-bottom: 1rem;
             text-transform: uppercase;
             letter-spacing: 3px;
-            opacity: 0.9;
+            text-align: center;
         }
 
         .number-display {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #ff3333;
             margin: 2rem 0;
             padding: 1.5rem;
@@ -95,31 +149,59 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: hidden;
         }
 
-        .number-display::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff0000, transparent, #ff0000);
+        .simplified-notation {
+            font-size: 2.5rem;
+            color: #ff1744;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .history-section {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(40, 0, 0, 0.5);
             border-radius: 10px;
-            opacity: 0;
-            animation: borderGlow 3s linear infinite;
-            z-index: -1;
+            padding: 1rem;
+            margin-top: 2rem;
         }
 
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 0.5; }
+        .history-entry {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: rgba(139, 0, 0, 0.1);
+            border-left: 3px solid #ff0000;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: #ff9999;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(40, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #8b0000, #ff0000);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff0000, #ff6b6b);
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1rem;
             margin-top: 2rem;
         }
@@ -129,16 +211,17 @@
             background: rgba(139, 0, 0, 0.2);
             border-radius: 8px;
             border: 1px solid rgba(255, 0, 0, 0.2);
+            text-align: center;
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #ff9999;
             margin-bottom: 0.5rem;
         }
 
         .stat-value {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #ff4444;
             font-weight: bold;
         }
@@ -149,7 +232,7 @@
             background: rgba(139, 0, 0, 0.3);
             border-radius: 5px;
             overflow: hidden;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         .progress-fill {
@@ -157,14 +240,14 @@
             background: linear-gradient(90deg, #8b0000, #ff0000, #ff6b6b);
             width: 0%;
             transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
 
-        .controls {
-            margin-top: 2rem;
+        .button-controls {
             display: flex;
             gap: 1rem;
             justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
         }
 
         button {
@@ -194,47 +277,94 @@
             cursor: not-allowed;
         }
 
-        .notation-info {
+        .stage-info {
+            text-align: center;
             margin-top: 1rem;
             font-size: 0.9rem;
             color: #ff9999;
             opacity: 0.8;
         }
+
+        .arrow-multiplier {
+            font-size: 1.1rem;
+            color: #ff1744;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
         <h1>Hyperoperational Growth Visualizer</h1>
         
-        <div class="stage-indicator" id="stage">Stage: Exponential</div>
-        
-        <div class="number-display" id="display">3</div>
-        
-        <div class="notation-info" id="notation">Standard Notation</div>
-        
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress"></div>
+        <div class="container">
+            <div class="controls-section">
+                <div class="control-group">
+                    <div class="control-label">Starting Number</div>
+                    <input type="number" id="startNumber" value="3" min="1" max="1000000">
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">Growth Speed (ms)</div>
+                    <input type="range" id="speedControl" min="10" max="2000" value="100">
+                    <div class="speed-display">Speed: <span id="speedValue">100</span> ms</div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">Auto Scroll</div>
+                    <select id="autoScroll">
+                        <option value="on">On</option>
+                        <option value="off">Off</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="stage-indicator" id="stage">Stage: Exponential</div>
+            
+            <div class="number-display">
+                <div id="display">3</div>
+            </div>
+            
+            <div class="simplified-notation" id="simplifiedNotation">3</div>
+            
+            <div class="stage-info" id="stageInfo">Growing exponentially...</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Iterations</div>
+                    <div class="stat-value" id="iterations">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Growth Type</div>
+                    <div class="stat-value" id="growthRate">Exponential</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Arrows</div>
+                    <div class="stat-value" id="arrows">N/A</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Arrow Multiplier</div>
+                    <div class="stat-value" id="arrowMultiplier">×1</div>
+                </div>
+            </div>
+            
+            <div class="button-controls">
+                <button id="startBtn">Start Growth</button>
+                <button id="pauseBtn">Pause</button>
+                <button id="resetBtn">Reset</button>
+                <button id="skipStageBtn">Skip Stage</button>
+            </div>
         </div>
         
-        <div class="stats">
-            <div class="stat-box">
-                <div class="stat-label">Growth Rate</div>
-                <div class="stat-value" id="growthRate">Exponential</div>
+        <div class="container">
+            <div class="control-label">Growth History</div>
+            <div class="history-section" id="history">
+                <div class="history-entry">Initialized with value: 3</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-label">Iterations</div>
-                <div class="stat-value" id="iterations">0</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Arrow Count</div>
-                <div class="stat-value" id="arrows">N/A</div>
-            </div>
-        </div>
-        
-        <div class="controls">
-            <button id="startBtn">Start Growth</button>
-            <button id="pauseBtn">Pause</button>
-            <button id="resetBtn">Reset</button>
         </div>
     </div>
 
@@ -242,14 +372,14 @@
     <script src="ExpantaNum.min.js"></script>
     
     <script>
-        // Initialize ExpantaNum - fallback if library not loaded
+        // ExpantaNum fallback
         if (typeof ExpantaNum === 'undefined') {
             console.warn('ExpantaNum not loaded, using simulation mode');
-            // Simulation class for demonstration
             class ExpantaNum {
                 constructor(value) {
                     this.value = value;
                     this.array = [0, 0, 0];
+                    this.arrows = 0;
                     if (typeof value === 'string') {
                         this.parseString(value);
                     } else if (typeof value === 'number') {
@@ -258,7 +388,6 @@
                 }
                 
                 parseString(str) {
-                    // Simple parsing for demonstration
                     if (str.includes('e')) {
                         const parts = str.split('e');
                         this.array[0] = parseFloat(parts[1]) || 0;
@@ -266,15 +395,21 @@
                 }
                 
                 static tetr(base, height) {
-                    return new ExpantaNum(`1e${Math.pow(10, height)}`);
+                    const result = new ExpantaNum(`1e${Math.pow(10, height)}`);
+                    result.arrows = 0;
+                    return result;
                 }
                 
                 static pent(base, height) {
-                    return new ExpantaNum(`1e${Math.pow(10, height * 10)}`);
+                    const result = new ExpantaNum(`1e${Math.pow(10, height * 10)}`);
+                    result.arrows = 0;
+                    return result;
                 }
                 
                 static arrow(base, arrows, height) {
-                    return new ExpantaNum(`1e${Math.pow(10, arrows * height)}`);
+                    const result = new ExpantaNum(`1e${Math.pow(10, arrows * height)}`);
+                    result.arrows = arrows;
+                    return result;
                 }
                 
                 toString() {
@@ -284,6 +419,13 @@
                     return `e${this.array[0].toExponential(2)}`;
                 }
                 
+                toJ() {
+                    if (this.arrows > 0) {
+                        return `J{${this.arrows}}`;
+                    }
+                    return this.toString();
+                }
+                
                 gt(other) {
                     return this.array[0] > (other.array ? other.array[0] : other);
                 }
@@ -291,62 +433,102 @@
         }
 
         // Global variables
-        let currentNumber = new ExpantaNum(3);
+        let currentNumber;
         let stage = 'exponential';
         let iterations = 0;
         let isRunning = false;
         let animationId = null;
         let arrowCount = 0;
+        let arrowMultiplier = 1;
         let stageProgress = 0;
+        let growthSpeed = 100;
+        let startingNumber = 3;
+        let autoScroll = true;
+        let historyEntries = [];
 
-        // Stage thresholds
-        const stages = {
-            exponential: { threshold: 33, next: 'tetrational' },
-            tetrational: { threshold: 10000, next: 'pentrational' },
-            pentrational: { threshold: 100000, next: 'hyperoperational' },
-            hyperoperational: { threshold: Infinity, next: null }
-        };
+        // Initialize
+        function initialize() {
+            startingNumber = parseInt(document.getElementById('startNumber').value) || 3;
+            currentNumber = new ExpantaNum(startingNumber);
+            growthSpeed = parseInt(document.getElementById('speedControl').value);
+            autoScroll = document.getElementById('autoScroll').value === 'on';
+            
+            addHistoryEntry(`Initialized with value: ${startingNumber}`);
+        }
+
+        // Add history entry
+        function addHistoryEntry(text) {
+            const historyEl = document.getElementById('history');
+            const entry = document.createElement('div');
+            entry.className = 'history-entry';
+            entry.textContent = `[${iterations}] ${text}`;
+            historyEl.appendChild(entry);
+            
+            if (autoScroll) {
+                historyEl.scrollTop = historyEl.scrollHeight;
+            }
+            
+            // Limit history to 100 entries
+            if (historyEl.children.length > 100) {
+                historyEl.removeChild(historyEl.firstChild);
+            }
+        }
 
         // Update display
         function updateDisplay() {
             const display = document.getElementById('display');
+            const simplifiedEl = document.getElementById('simplifiedNotation');
             const stageEl = document.getElementById('stage');
             const iterEl = document.getElementById('iterations');
             const growthEl = document.getElementById('growthRate');
             const arrowsEl = document.getElementById('arrows');
-            const notationEl = document.getElementById('notation');
+            const multiplierEl = document.getElementById('arrowMultiplier');
+            const stageInfoEl = document.getElementById('stageInfo');
             const progressEl = document.getElementById('progress');
             
-            // Format number for display
+            // Format display
             let displayText = currentNumber.toString();
+            let simplifiedText = displayText;
             
-            // Update stage indicator
+            // Stage-specific formatting
+            if (stage === 'hyperoperational' || stage === 'transoperational') {
+                const effectiveArrows = arrowCount * arrowMultiplier;
+                simplifiedText = `J{${effectiveArrows}}`;
+                arrowsEl.textContent = effectiveArrows;
+            } else {
+                arrowsEl.textContent = 'N/A';
+            }
+            
+            // Update stage text
             let stageText = stage.charAt(0).toUpperCase() + stage.slice(1);
             stageEl.textContent = `Stage: ${stageText}`;
+            
+            // Update stage info
+            const stageMessages = {
+                exponential: 'Growing exponentially...',
+                tetrational: 'Power towers rising...',
+                pentrational: 'Hyper-towers ascending...',
+                hyperoperational: 'Arrow notation expanding...',
+                transoperational: 'Transcending operations...'
+            };
+            stageInfoEl.textContent = stageMessages[stage] || 'Computing...';
+            
+            // Update displays
+            display.textContent = displayText;
+            simplifiedEl.textContent = simplifiedText;
             
             // Update stats
             iterEl.textContent = iterations;
             growthEl.textContent = stageText;
+            multiplierEl.textContent = `×${arrowMultiplier}`;
             
-            if (stage === 'hyperoperational') {
-                arrowsEl.textContent = arrowCount;
-                notationEl.textContent = `Arrow Notation (${arrowCount} arrows)`;
-            } else if (stage === 'pentrational') {
-                arrowsEl.textContent = 'Pre-Arrow';
-                notationEl.textContent = 'Pentation Notation';
-            } else if (stage === 'tetrational') {
-                arrowsEl.textContent = 'Pre-Arrow';
-                notationEl.textContent = 'Tetration Notation';
-            } else {
-                arrowsEl.textContent = 'N/A';
-                notationEl.textContent = 'Scientific Notation';
-            }
-            
-            // Update display with formatted number
-            display.textContent = displayText;
-            
-            // Update progress bar
+            // Update progress
             progressEl.style.width = `${Math.min(stageProgress, 100)}%`;
+            
+            // Auto scroll display if needed
+            if (autoScroll && display.scrollWidth > display.clientWidth) {
+                display.scrollLeft = display.scrollWidth;
+            }
         }
 
         // Growth function
@@ -358,53 +540,67 @@
             
             switch(stage) {
                 case 'exponential':
-                    // Exponential growth
-                    currentNumber = new ExpantaNum(Math.pow(3, iterations));
+                    currentNumber = new ExpantaNum(Math.pow(startingNumber, iterations));
                     
-                    // Check for stage transition at 1e33
                     if (iterations > 33) {
                         stage = 'tetrational';
+                        addHistoryEntry('Entering Tetrational Stage');
                         currentNumber = new ExpantaNum('1e33');
                     }
                     break;
                     
                 case 'tetrational':
-                    // Tetrational growth starting from 1e33
                     const tetrHeight = (iterations - 33) * 0.1;
                     currentNumber = ExpantaNum.tetr(10, 33 + tetrHeight);
                     
-                    // Transition to pentrational
                     if (iterations > 100) {
                         stage = 'pentrational';
+                        addHistoryEntry('Entering Pentrational Stage');
                     }
                     break;
                     
                 case 'pentrational':
-                    // Pentrational growth starting from (10^)^10 10000
                     const pentHeight = (iterations - 100) * 0.05;
                     currentNumber = ExpantaNum.pent(10, 10000 + pentHeight);
                     
-                    // Transition to hyperoperational
                     if (iterations > 200) {
                         stage = 'hyperoperational';
                         arrowCount = 10;
+                        addHistoryEntry('Entering Hyperoperational Stage');
                     }
                     break;
                     
                 case 'hyperoperational':
-                    // Hyperoperational with exponentially increasing arrows
                     arrowCount = Math.floor(10 * Math.pow(1.1, (iterations - 200) * 0.1));
                     const hyperHeight = iterations - 200;
-                    currentNumber = ExpantaNum.arrow(10, arrowCount, hyperHeight);
+                    currentNumber = ExpantaNum.arrow(10, arrowCount * arrowMultiplier, hyperHeight);
+                    
+                    if (iterations > 300) {
+                        stage = 'transoperational';
+                        addHistoryEntry('Entering Transoperational Stage!');
+                    }
+                    break;
+                    
+                case 'transoperational':
+                    // Transoperational: multiply arrow count exponentially
+                    arrowCount = Math.floor(10 * Math.pow(1.2, (iterations - 300) * 0.15));
+                    arrowMultiplier = Math.floor(Math.pow(2, (iterations - 300) * 0.05));
+                    const transHeight = iterations - 300;
+                    const totalArrows = arrowCount * arrowMultiplier;
+                    currentNumber = ExpantaNum.arrow(10, totalArrows, transHeight);
+                    
+                    if (iterations % 50 === 0) {
+                        addHistoryEntry(`Arrow multiplier increased to ×${arrowMultiplier}`);
+                    }
                     break;
             }
             
             updateDisplay();
             
-            // Continue animation
-            animationId = requestAnimationFrame(() => {
-                setTimeout(grow, 100); // Update every 100ms for visibility
-            });
+            // Continue animation with adjustable speed
+            animationId = setTimeout(() => {
+                requestAnimationFrame(grow);
+            }, growthSpeed);
         }
 
         // Control functions
@@ -419,27 +615,66 @@
         function pause() {
             isRunning = false;
             if (animationId) {
-                cancelAnimationFrame(animationId);
+                clearTimeout(animationId);
             }
+            addHistoryEntry('Growth paused');
         }
 
         function reset() {
             pause();
-            currentNumber = new ExpantaNum(3);
             stage = 'exponential';
             iterations = 0;
             arrowCount = 0;
+            arrowMultiplier = 1;
             stageProgress = 0;
+            historyEntries = [];
+            document.getElementById('history').innerHTML = '';
             document.getElementById('startBtn').textContent = 'Start Growth';
+            initialize();
             updateDisplay();
+        }
+
+        function skipStage() {
+            const stageOrder = ['exponential', 'tetrational', 'pentrational', 'hyperoperational', 'transoperational'];
+            const currentIndex = stageOrder.indexOf(stage);
+            if (currentIndex < stageOrder.length - 1) {
+                stage = stageOrder[currentIndex + 1];
+                iterations = (currentIndex + 1) * 100 + 1;
+                addHistoryEntry(`Skipped to ${stage} stage`);
+                
+                if (stage === 'hyperoperational') {
+                    arrowCount = 10;
+                } else if (stage === 'transoperational') {
+                    arrowCount = 100;
+                    arrowMultiplier = 2;
+                }
+            }
         }
 
         // Event listeners
         document.getElementById('startBtn').addEventListener('click', start);
         document.getElementById('pauseBtn').addEventListener('click', pause);
         document.getElementById('resetBtn').addEventListener('click', reset);
+        document.getElementById('skipStageBtn').addEventListener('click', skipStage);
+        
+        document.getElementById('speedControl').addEventListener('input', (e) => {
+            growthSpeed = parseInt(e.target.value);
+            document.getElementById('speedValue').textContent = growthSpeed;
+        });
+        
+        document.getElementById('startNumber').addEventListener('change', (e) => {
+            if (!isRunning && iterations === 0) {
+                initialize();
+                updateDisplay();
+            }
+        });
+        
+        document.getElementById('autoScroll').addEventListener('change', (e) => {
+            autoScroll = e.target.value === 'on';
+        });
 
-        // Initial display
+        // Initialize on load
+        initialize();
         updateDisplay();
     </script>
 </body>
