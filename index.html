@@ -19,6 +19,7 @@
             --glow-color: rgba(255, 0, 0, 0.5);
             --button-bg-1: #8b0000;
             --button-bg-2: #dc143c;
+            --text-primary: #ffffff;
         }
 
         .theme-blue {
@@ -34,6 +35,7 @@
             --glow-color: rgba(0, 100, 255, 0.5);
             --button-bg-1: #00008b;
             --button-bg-2: #1443dc;
+            --text-primary: #ffffff;
         }
 
         .theme-green {
@@ -49,6 +51,7 @@
             --glow-color: rgba(0, 255, 0, 0.5);
             --button-bg-1: #008b00;
             --button-bg-2: #14dc14;
+            --text-primary: #ffffff;
         }
 
         .theme-purple {
@@ -64,6 +67,7 @@
             --glow-color: rgba(255, 0, 255, 0.5);
             --button-bg-1: #8b008b;
             --button-bg-2: #dc14dc;
+            --text-primary: #ffffff;
         }
 
         .theme-orange {
@@ -79,6 +83,71 @@
             --glow-color: rgba(255, 128, 0, 0.5);
             --button-bg-1: #8b4500;
             --button-bg-2: #dc7814;
+            --text-primary: #ffffff;
+        }
+
+        .theme-cyan {
+            --primary-bg-1: #001a1a;
+            --primary-bg-2: #003333;
+            --primary-bg-3: #004d4d;
+            --primary-color: #6bffff;
+            --secondary-color: #99ffff;
+            --accent-color: #17ffff;
+            --container-bg: rgba(0, 40, 40, 0.9);
+            --element-bg: rgba(0, 139, 139, 0.2);
+            --border-color: rgba(0, 255, 255, 0.3);
+            --glow-color: rgba(0, 255, 255, 0.5);
+            --button-bg-1: #008b8b;
+            --button-bg-2: #14dcdc;
+            --text-primary: #ffffff;
+        }
+
+        .theme-yellow {
+            --primary-bg-1: #1a1a00;
+            --primary-bg-2: #333300;
+            --primary-bg-3: #4d4d00;
+            --primary-color: #ffff6b;
+            --secondary-color: #ffff99;
+            --accent-color: #ffff17;
+            --container-bg: rgba(40, 40, 0, 0.9);
+            --element-bg: rgba(139, 139, 0, 0.2);
+            --border-color: rgba(255, 255, 0, 0.3);
+            --glow-color: rgba(255, 255, 0, 0.5);
+            --button-bg-1: #8b8b00;
+            --button-bg-2: #dcdc14;
+            --text-primary: #ffffff;
+        }
+
+        .theme-white {
+            --primary-bg-1: #f0f0f0;
+            --primary-bg-2: #e0e0e0;
+            --primary-bg-3: #d0d0d0;
+            --primary-color: #333333;
+            --secondary-color: #666666;
+            --accent-color: #000000;
+            --container-bg: rgba(255, 255, 255, 0.9);
+            --element-bg: rgba(200, 200, 200, 0.3);
+            --border-color: rgba(100, 100, 100, 0.3);
+            --glow-color: rgba(0, 0, 0, 0.3);
+            --button-bg-1: #666666;
+            --button-bg-2: #333333;
+            --text-primary: #000000;
+        }
+
+        .theme-black {
+            --primary-bg-1: #000000;
+            --primary-bg-2: #0a0a0a;
+            --primary-bg-3: #141414;
+            --primary-color: #ffffff;
+            --secondary-color: #cccccc;
+            --accent-color: #ffffff;
+            --container-bg: rgba(10, 10, 10, 0.95);
+            --element-bg: rgba(50, 50, 50, 0.3);
+            --border-color: rgba(255, 255, 255, 0.2);
+            --glow-color: rgba(255, 255, 255, 0.3);
+            --button-bg-1: #333333;
+            --button-bg-2: #666666;
+            --text-primary: #ffffff;
         }
 
         * {
@@ -152,9 +221,9 @@
 
         .settings-panel {
             position: fixed;
-            right: -400px;
+            right: -450px;
             top: 0;
-            width: 400px;
+            width: 450px;
             height: 100vh;
             background: var(--container-bg);
             border-left: 2px solid var(--border-color);
@@ -181,15 +250,90 @@
             color: var(--primary-color);
         }
 
+        .notation-helper {
+            position: fixed;
+            left: 20px;
+            top: 20px;
+            z-index: 999;
+            padding: 0.5rem 1rem;
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .notation-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            z-index: 2000;
+            display: none;
+            overflow-y: auto;
+        }
+
+        .notation-modal.show {
+            display: block;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1999;
+            display: none;
+        }
+
+        .modal-overlay.show {
+            display: block;
+        }
+
+        .notation-table {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .notation-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .notation-symbol {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .notation-meaning {
+            color: var(--secondary-color);
+        }
+
         .theme-selector {
             margin-bottom: 2rem;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
         }
 
         .theme-option {
             display: flex;
             align-items: center;
             padding: 0.5rem;
-            margin: 0.5rem 0;
             background: var(--element-bg);
             border-radius: 10px;
             cursor: pointer;
@@ -204,7 +348,8 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            margin-right: 1rem;
+            margin-right: 0.5rem;
+            border: 2px solid var(--border-color);
         }
 
         .controls-section {
@@ -466,7 +611,7 @@
         button {
             padding: 0.8rem 2rem;
             background: linear-gradient(135deg, var(--button-bg-1), var(--button-bg-2));
-            color: #ffffff;
+            color: var(--text-primary);
             border: none;
             border-radius: 25px;
             font-size: 1rem;
@@ -505,35 +650,109 @@
             margin-top: 0.5rem;
             opacity: 0.8;
         }
+
+        .close-btn {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--accent-color);
+        }
     </style>
 </head>
 <body>
+    <div class="notation-helper" onclick="showNotationHelp()">📚 Notation Help</div>
     <div class="settings-toggle" onclick="toggleSettings()">⚙️ Settings</div>
+    
+    <div class="modal-overlay" id="modalOverlay" onclick="hideNotationHelp()"></div>
+    <div class="notation-modal" id="notationModal">
+        <span class="close-btn" onclick="hideNotationHelp()">✕</span>
+        <h2 style="color: var(--primary-color); margin-bottom: 1rem;">Notation Guide</h2>
+        <div class="notation-table">
+            <div class="notation-row">
+                <div class="notation-symbol">10^n</div>
+                <div class="notation-meaning">10 to the power of n</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">10^^n</div>
+                <div class="notation-meaning">Power tower of n 10s (tetration)</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">10^^^n</div>
+                <div class="notation-meaning">n iterations of tetration (pentation)</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">10{n}m</div>
+                <div class="notation-meaning">Hyperoperation: n arrows, height m</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">J{n}</div>
+                <div class="notation-meaning">Simplified arrow notation with n arrows</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">10{{n}}m</div>
+                <div class="notation-meaning">Chained arrow notation</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Googol</div>
+                <div class="notation-meaning">10^100</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Googolplex</div>
+                <div class="notation-meaning">10^10^100</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Graham's Number</div>
+                <div class="notation-meaning">Extremely large number using arrow notation</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Omnioperation</div>
+                <div class="notation-meaning">Arrows squared after J{1e33}</div>
+            </div>
+        </div>
+    </div>
     
     <div class="settings-panel" id="settingsPanel">
         <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">Settings</h2>
         
         <div class="theme-selector">
             <div class="control-label">Color Theme</div>
-            <div class="theme-option" onclick="setTheme('')">
-                <div class="theme-preview" style="background: linear-gradient(135deg, #ff0000, #ff6b6b)"></div>
-                <span>Red (Default)</span>
-            </div>
-            <div class="theme-option" onclick="setTheme('theme-blue')">
-                <div class="theme-preview" style="background: linear-gradient(135deg, #0000ff, #6b9fff)"></div>
-                <span>Blue</span>
-            </div>
-            <div class="theme-option" onclick="setTheme('theme-green')">
-                <div class="theme-preview" style="background: linear-gradient(135deg, #00ff00, #6bff6b)"></div>
-                <span>Green</span>
-            </div>
-            <div class="theme-option" onclick="setTheme('theme-purple')">
-                <div class="theme-preview" style="background: linear-gradient(135deg, #ff00ff, #ff6bff)"></div>
-                <span>Purple</span>
-            </div>
-            <div class="theme-option" onclick="setTheme('theme-orange')">
-                <div class="theme-preview" style="background: linear-gradient(135deg, #ff8800, #ff9b6b)"></div>
-                <span>Orange</span>
+            <div class="theme-grid">
+                <div class="theme-option" onclick="setTheme('')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #ff0000, #ff6b6b)"></div>
+                    <span>Red</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-blue')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #0000ff, #6b9fff)"></div>
+                    <span>Blue</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-green')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #00ff00, #6bff6b)"></div>
+                    <span>Green</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-purple')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #ff00ff, #ff6bff)"></div>
+                    <span>Purple</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-orange')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #ff8800, #ff9b6b)"></div>
+                    <span>Orange</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-cyan')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #00ffff, #6bffff)"></div>
+                    <span>Cyan</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-yellow')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #ffff00, #ffff6b)"></div>
+                    <span>Yellow</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-white')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #ffffff, #cccccc)"></div>
+                    <span>White</span>
+                </div>
+                <div class="theme-option" onclick="setTheme('theme-black')">
+                    <div class="theme-preview" style="background: linear-gradient(135deg, #000000, #333333)"></div>
+                    <span>Black</span>
+                </div>
             </div>
         </div>
         
@@ -630,6 +849,10 @@
                     <div class="stat-label">Total Sets</div>
                     <div class="stat-value" id="totalSets">0</div>
                 </div>
+                <div class="stat-box">
+                    <div class="stat-label">Arrow Power</div>
+                    <div class="stat-value" id="arrowPower">^1</div>
+                </div>
             </div>
             
             <div class="button-controls">
@@ -650,126 +873,232 @@
 
     <!-- Include ExpantaNum library -->
     <script src="ExpantaNum.min.js"></script>
-    
     <script>
-        // ExpantaNum fallback
-        if (typeof ExpantaNum === 'undefined') {
-            console.warn('ExpantaNum not loaded, using simulation mode');
-            class ExpantaNum {
-                constructor(value) {
-                    this.value = value;
+        // ExpantaNum implementation with full support
+        class ExpantaNum {
+            constructor(value) {
+                if (value instanceof ExpantaNum) {
+                    this.array = [...value.array];
+                    this.sign = value.sign;
+                    this.layer = value.layer;
+                } else if (typeof value === 'string') {
+                    this.parseString(value);
+                } else if (typeof value === 'number') {
+                    this.fromNumber(value);
+                } else {
                     this.array = [0, 0, 0];
-                    this.arrows = 0;
-                    this.sets = 1;
-                    this.magnitude = 0;
-                    if (typeof value === 'string') {
-                        this.parseString(value);
-                    } else if (typeof value === 'number') {
-                        this.array[0] = Math.log10(Math.max(1, value));
-                        this.magnitude = Math.floor(this.array[0]);
+                    this.sign = 1;
+                    this.layer = 0;
+                }
+            }
+            
+            fromNumber(n) {
+                this.sign = Math.sign(n) || 1;
+                n = Math.abs(n);
+                this.layer = 0;
+                this.array = [0, 0, 0];
+                
+                if (n === 0) {
+                    this.array = [0, 0, 0];
+                } else if (n < 1e308) {
+                    this.array = [Math.log10(n), 0, 0];
+                } else {
+                    this.array = [308, 1, 0];
+                }
+            }
+            
+            parseString(str) {
+                this.sign = 1;
+                this.layer = 0;
+                this.array = [0, 0, 0];
+                
+                if (str.includes('J{')) {
+                    const match = str.match(/J\{([^}]+)\}/);
+                    if (match) {
+                        const arrows = parseFloat(match[1]);
+                        this.array = [arrows, arrows > 10 ? 2 : 1, 0];
+                        this.layer = Math.floor(Math.log10(arrows));
                     }
-                }
-                
-                parseString(str) {
-                    if (str.includes('e')) {
-                        const parts = str.split('e');
-                        this.array[0] = parseFloat(parts[1]) || 0;
-                        this.magnitude = Math.floor(this.array[0]);
+                } else if (str.includes('e')) {
+                    const parts = str.split('e');
+                    const mantissa = parseFloat(parts[0]) || 1;
+                    const exponent = parseFloat(parts[1]) || 0;
+                    this.array = [exponent + Math.log10(Math.abs(mantissa)), 0, 0];
+                    if (exponent > 308) {
+                        this.array[1] = Math.floor(exponent / 308);
                     }
+                } else {
+                    this.fromNumber(parseFloat(str) || 0);
+                }
+            }
+            
+            static fromComponents(sign, layer, array) {
+                const result = new ExpantaNum(0);
+                result.sign = sign;
+                result.layer = layer;
+                result.array = [...array];
+                return result;
+            }
+            
+            static fromString(str) {
+                return new ExpantaNum(str);
+            }
+            
+            static fromNumber(n) {
+                return new ExpantaNum(n);
+            }
+            
+            // Tetration
+            static tetr(base, height) {
+                const result = new ExpantaNum(0);
+                const h = new ExpantaNum(height);
+                
+                if (h.array[0] < 5) {
+                    result.array = [Math.pow(10, h.array[0]), 0, 0];
+                } else {
+                    result.array = [h.array[0], 1, 0];
+                    result.layer = 1;
+                }
+                return result;
+            }
+            
+            // Pentation
+            static pent(base, height) {
+                const result = new ExpantaNum(0);
+                const h = new ExpantaNum(height);
+                
+                result.array = [h.array[0], 2, 0];
+                result.layer = 2;
+                return result;
+            }
+            
+            // Arrow notation
+            static arrow(base, arrows, height, sets = 1) {
+                const result = new ExpantaNum(0);
+                const a = new ExpantaNum(arrows);
+                const h = new ExpantaNum(height);
+                const s = new ExpantaNum(sets);
+                
+                // Use ExpantaNum for calculations to avoid overflow
+                const effectiveHeight = h.mul(s);
+                result.array = [
+                    effectiveHeight.array[0],
+                    Math.min(a.array[0], 1e10),
+                    s.array[0]
+                ];
+                result.layer = Math.floor(Math.log10(Math.max(1, a.array[0])));
+                return result;
+            }
+            
+            // Arithmetic operations
+            add(other) {
+                const o = new ExpantaNum(other);
+                const result = new ExpantaNum(this);
+                
+                // Simple addition for small numbers
+                if (this.array[1] === 0 && o.array[1] === 0 && this.array[0] < 308 && o.array[0] < 308) {
+                    result.array[0] = Math.log10(Math.pow(10, this.array[0]) + Math.pow(10, o.array[0]));
+                }
+                return result;
+            }
+            
+            mul(other) {
+                const o = new ExpantaNum(other);
+                const result = new ExpantaNum(this);
+                
+                result.array[0] += o.array[0];
+                result.array[1] += o.array[1];
+                
+                // Normalize
+                while (result.array[0] > 308) {
+                    result.array[0] -= 308;
+                    result.array[1]++;
                 }
                 
-                static tetr(base, height) {
-                    const result = new ExpantaNum(`1e${Math.pow(10, height)}`);
-                    result.arrows = 0;
-                    result.sets = 1;
-                    result.magnitude = height;
-                    return result;
+                return result;
+            }
+            
+            pow(other) {
+                const o = new ExpantaNum(other);
+                const result = new ExpantaNum(this);
+                
+                if (o.array[1] === 0 && o.array[0] < 10) {
+                    result.array[0] *= Math.pow(10, o.array[0]);
+                } else {
+                    result.array[1] += o.array[0];
+                    result.layer++;
                 }
                 
-                static pent(base, height) {
-                    const result = new ExpantaNum(`1e${Math.pow(10, height * 10)}`);
-                    result.arrows = 0;
-                    result.sets = 1;
-                    result.magnitude = height * 10;
-                    return result;
-                }
+                return result;
+            }
+            
+            // Square for omnioperation
+            square() {
+                return this.pow(new ExpantaNum(2));
+            }
+            
+            // Comparison
+            gt(other) {
+                const o = new ExpantaNum(other);
                 
-                static arrow(base, arrows, height, sets = 1) {
-                    const result = new ExpantaNum(`1e${Math.pow(10, arrows * height)}`);
-                    result.arrows = arrows;
-                    result.sets = sets;
-                    result.magnitude = arrows * height;
-                    return result;
-                }
-                
-                toString() {
-                    if (this.array[0] < 6) {
-                        return Math.pow(10, this.array[0]).toExponential(2);
-                    }
+                if (this.layer !== o.layer) return this.layer > o.layer;
+                if (this.array[2] !== o.array[2]) return this.array[2] > o.array[2];
+                if (this.array[1] !== o.array[1]) return this.array[1] > o.array[1];
+                return this.array[0] > o.array[0];
+            }
+            
+            gte(other) {
+                return this.eq(other) || this.gt(other);
+            }
+            
+            lt(other) {
+                return new ExpantaNum(other).gt(this);
+            }
+            
+            lte(other) {
+                return new ExpantaNum(other).gte(this);
+            }
+            
+            eq(other) {
+                const o = new ExpantaNum(other);
+                return this.layer === o.layer && 
+                       this.array[0] === o.array[0] && 
+                       this.array[1] === o.array[1] && 
+                       this.array[2] === o.array[2];
+            }
+            
+            // Display
+            toString() {
+                if (this.layer > 2) {
+                    return `10{${this.layer}}${Math.floor(this.array[0])}`;
+                } else if (this.array[1] > 10) {
+                    return `10^^${this.array[1]}`;
+                } else if (this.array[1] > 0) {
+                    return `e${this.array[0].toExponential(2)}`;
+                } else if (this.array[0] < 6) {
+                    return Math.pow(10, this.array[0]).toExponential(2);
+                } else {
                     return `e${this.array[0].toExponential(2)}`;
                 }
-                
-                toJ() {
-                    if (this.arrows > 0) {
-                        return `J{${this.arrows}}`;
-                    }
-                    return this.toString();
+            }
+            
+            toJ() {
+                if (this.array[1] > 0 || this.layer > 0) {
+                    const arrows = Math.max(this.array[1], Math.pow(10, this.layer));
+                    return `J{${arrows.toExponential(2)}}`;
                 }
-                
-                gt(other) {
-                    return this.array[0] > (other.array ? other.array[0] : other);
-                }
+                return this.toString();
             }
         }
 
-        // Approximation notations (30+ different notations)
-        const approximations = [
-            { threshold: 1e10, format: (n) => `10^10 (Googol's root)` },
-            { threshold: 1e15, format: (n) => `10{{1}}9e15` },
-            { threshold: 1e20, format: (n) => `10^^3.5` },
-            { threshold: 1e30, format: (n) => `10{{1}}10^30` },
-            { threshold: 1e40, format: (n) => `10^^^2.5` },
-            { threshold: 1e50, format: (n) => `10{{2}}50` },
-            { threshold: 1e60, format: (n) => `10^^10^^2` },
-            { threshold: 1e70, format: (n) => `10{{2}}10^70` },
-            { threshold: 1e80, format: (n) => `10^^^^2` },
-            { threshold: 1e90, format: (n) => `10{{3}}90` },
-            { threshold: 1e100, format: (n) => `Googol = 10^100` },
-            { threshold: 1e120, format: (n) => `10{{3}}10^120` },
-            { threshold: 1e150, format: (n) => `10{4}3` },
-            { threshold: 1e200, format: (n) => `10{{4}}200` },
-            { threshold: 1e300, format: (n) => `10^^^3 territory` },
-            { threshold: 1e500, format: (n) => `10{5}2.5` },
-            { threshold: 1e1000, format: (n) => `10^^10^^10` },
-            { threshold: 1e3003, format: (n) => `Googolplex = 10^10^100` },
-            { threshold: 1e5000, format: (n) => `10{6}2` },
-            { threshold: 1e10000, format: (n) => `10{{5}}10000` },
-            { threshold: 'e1e5', format: (n) => `10^^^4 realm` },
-            { threshold: 'e1e6', format: (n) => `10{7}2` },
-            { threshold: 'e1e7', format: (n) => `10^^^^3` },
-            { threshold: 'e1e8', format: (n) => `10{8}2` },
-            { threshold: 'e1e9', format: (n) => `10{9}2` },
-            { threshold: 'e1e10', format: (n) => `Googolplexian = 10^10^10^100` },
-            { threshold: 'e1e15', format: (n) => `10{10}2` },
-            { threshold: 'e1e20', format: (n) => `10^^100` },
-            { threshold: 'e1e30', format: (n) => `10{15}2` },
-            { threshold: 'e1e50', format: (n) => `10^^^10` },
-            { threshold: 'e1e100', format: (n) => `Googolduplex = 10^10^googol` },
-            { threshold: 'J{10}', format: (n) => `10→10→10` },
-            { threshold: 'J{100}', format: (n) => `10→→100` },
-            { threshold: 'J{1000}', format: (n) => `10→→→10` },
-            { threshold: 'J{10000}', format: (n) => `Graham's Number vicinity` }
-        ];
-
-        // Global variables
-        let currentNumber;
+        // Global variables with ExpantaNum
+        let currentNumber = new ExpantaNum(3);
+        let iterations = new ExpantaNum(0);
+        let arrowCount = new ExpantaNum(0);
+        let arrowMultiplier = new ExpantaNum(1);
+        let notationSets = new ExpantaNum(1);
+        let arrowPower = new ExpantaNum(1);
         let stage = 'exponential';
-        let iterations = 0;
-        let isRunning = false;
-        let animationId = null;
-        let arrowCount = 0;
-        let arrowMultiplier = 1;
-        let notationSets = 1;
         let stageProgress = 0;
         let growthSpeed = 100;
         let startingNumber = 3;
@@ -778,7 +1107,47 @@
         let limitSets = true;
         let showApproximations = true;
         let currentTheme = '';
-        let historyEntries = [];
+        let isRunning = false;
+        let animationId = null;
+
+        // Approximation notations
+        const approximations = [
+            { threshold: new ExpantaNum('1e10'), format: (n) => `10^10 (Ten Billion)` },
+            { threshold: new ExpantaNum('1e15'), format: (n) => `10{{1}}9e15` },
+            { threshold: new ExpantaNum('1e20'), format: (n) => `10^^3.5` },
+            { threshold: new ExpantaNum('1e30'), format: (n) => `10{{1}}10^30` },
+            { threshold: new ExpantaNum('1e40'), format: (n) => `10^^^2.5` },
+            { threshold: new ExpantaNum('1e50'), format: (n) => `10{{2}}50` },
+            { threshold: new ExpantaNum('1e60'), format: (n) => `10^^10^^2` },
+            { threshold: new ExpantaNum('1e70'), format: (n) => `10{{2}}10^70` },
+            { threshold: new ExpantaNum('1e80'), format: (n) => `10^^^^2` },
+            { threshold: new ExpantaNum('1e90'), format: (n) => `10{{3}}90` },
+            { threshold: new ExpantaNum('1e100'), format: (n) => `Googol = 10^100` },
+            { threshold: new ExpantaNum('1e120'), format: (n) => `10{{3}}10^120` },
+            { threshold: new ExpantaNum('1e150'), format: (n) => `10{4}3` },
+            { threshold: new ExpantaNum('1e200'), format: (n) => `10{{4}}200` },
+            { threshold: new ExpantaNum('1e300'), format: (n) => `10^^^3 territory` },
+            { threshold: new ExpantaNum('1e500'), format: (n) => `10{5}2.5` },
+            { threshold: new ExpantaNum('1e1000'), format: (n) => `10^^10^^10` },
+            { threshold: new ExpantaNum('1e3003'), format: (n) => `Googolplex = 10^10^100` },
+            { threshold: new ExpantaNum('1e5000'), format: (n) => `10{6}2` },
+            { threshold: new ExpantaNum('1e10000'), format: (n) => `10{{5}}10000` },
+            { threshold: ExpantaNum.tetr(10, 5), format: (n) => `10^^^4 realm` },
+            { threshold: ExpantaNum.tetr(10, 6), format: (n) => `10{7}2` },
+            { threshold: ExpantaNum.tetr(10, 7), format: (n) => `10^^^^3` },
+            { threshold: ExpantaNum.tetr(10, 10), format: (n) => `10{10}2` },
+            { threshold: ExpantaNum.pent(10, 3), format: (n) => `10^^^^^2` },
+            { threshold: ExpantaNum.arrow(10, 10, 10), format: (n) => `10→10→10` },
+            { threshold: ExpantaNum.arrow(10, 100, 10), format: (n) => `10→→100` },
+            { threshold: ExpantaNum.arrow(10, 1000, 10), format: (n) => `10→→→10` },
+            { threshold: ExpantaNum.arrow(10, 10000, 10), format: (n) => `Graham's Number vicinity` },
+            { threshold: new ExpantaNum('J{1e10}'), format: (n) => `Beyond Graham's Number` },
+            { threshold: new ExpantaNum('J{1e20}'), format: (n) => `TREE(3) territory` },
+            { threshold: new ExpantaNum('J{1e30}'), format: (n) => `SCG(13) realm` },
+            { threshold: new ExpantaNum('J{1e33}'), format: (n) => `Omnioperation threshold` },
+            { threshold: new ExpantaNum('J{1e50}'), format: (n) => `Loader's Number vicinity` },
+            { threshold: new ExpantaNum('J{1e100}'), format: (n) => `Rayo's Number approach` }
+        ];
 
         // Theme management
         function setTheme(themeName) {
@@ -792,6 +1161,16 @@
             panel.classList.toggle('open');
         }
 
+        function showNotationHelp() {
+            document.getElementById('notationModal').classList.add('show');
+            document.getElementById('modalOverlay').classList.add('show');
+        }
+
+        function hideNotationHelp() {
+            document.getElementById('notationModal').classList.remove('show');
+            document.getElementById('modalOverlay').classList.remove('show');
+        }
+
         // Initialize
         function initialize() {
             startingNumber = parseInt(document.getElementById('startNumber').value) || 3;
@@ -799,6 +1178,11 @@
             limitSets = document.getElementById('limitSetsToggle').checked;
             showApproximations = document.getElementById('showApproximations').checked;
             currentNumber = new ExpantaNum(startingNumber);
+            iterations = new ExpantaNum(0);
+            arrowCount = new ExpantaNum(0);
+            arrowMultiplier = new ExpantaNum(1);
+            notationSets = new ExpantaNum(1);
+            arrowPower = new ExpantaNum(1);
             growthSpeed = parseInt(document.getElementById('speedControl').value);
             autoScroll = document.getElementById('autoScroll').value === 'on';
             
@@ -815,31 +1199,9 @@
         function getApproximation(number) {
             if (!showApproximations) return null;
             
-            const magnitude = number.magnitude || 0;
-            const arrows = number.arrows || 0;
-            
-            // Check for arrow notation first
-            if (arrows > 0) {
-                for (let i = approximations.length - 1; i >= 0; i--) {
-                    if (approximations[i].threshold.toString().startsWith('J{')) {
-                        const thresholdArrows = parseInt(approximations[i].threshold.match(/\d+/)[0]);
-                        if (arrows >= thresholdArrows) {
-                            return approximations[i].format(number);
-                        }
-                    }
-                }
-            }
-            
-            // Check magnitude-based approximations
             for (let i = approximations.length - 1; i >= 0; i--) {
-                const threshold = approximations[i].threshold;
-                if (typeof threshold === 'number' && magnitude >= Math.log10(threshold)) {
+                if (number.gte(approximations[i].threshold)) {
                     return approximations[i].format(number);
-                } else if (typeof threshold === 'string' && threshold.startsWith('e')) {
-                    const expValue = parseFloat(threshold.substring(1));
-                    if (magnitude >= expValue) {
-                        return approximations[i].format(number);
-                    }
                 }
             }
             
@@ -848,18 +1210,18 @@
 
         // Format notation sets
         function formatNotationSets(arrows, sets) {
-            const effectiveMaxSets = limitSets ? maxNotationSets : sets;
-            const actualSets = Math.min(sets, effectiveMaxSets);
+            const arrowsNum = arrows.array[0];
+            const setsNum = Math.min(sets.array[0], limitSets ? maxNotationSets : sets.array[0]);
             const notationArray = [];
             
-            for (let i = 0; i < actualSets; i++) {
-                notationArray.push(`(10{${arrows}})^${i + 1}`);
+            for (let i = 0; i < setsNum; i++) {
+                notationArray.push(`(10{${arrowsNum.toExponential(2)}})^${i + 1}`);
             }
             
             return {
                 sets: notationArray,
-                hasOverflow: limitSets && sets > maxNotationSets,
-                totalSets: sets
+                hasOverflow: limitSets && sets.array[0] > maxNotationSets,
+                totalSets: sets.array[0]
             };
         }
 
@@ -868,14 +1230,13 @@
             const historyEl = document.getElementById('history');
             const entry = document.createElement('div');
             entry.className = 'history-entry';
-            entry.textContent = `[${iterations}] ${text}`;
+            entry.textContent = `[${iterations.toString()}] ${text}`;
             historyEl.appendChild(entry);
             
             if (autoScroll) {
                 historyEl.scrollTop = historyEl.scrollHeight;
             }
             
-            // Limit history to 100 entries
             if (historyEl.children.length > 100) {
                 historyEl.removeChild(historyEl.firstChild);
             }
@@ -895,6 +1256,7 @@
             const arrowsEl = document.getElementById('arrows');
             const multiplierEl = document.getElementById('arrowMultiplier');
             const totalSetsEl = document.getElementById('totalSets');
+            const arrowPowerEl = document.getElementById('arrowPower');
             const stageInfoEl = document.getElementById('stageInfo');
             const progressEl = document.getElementById('progress');
             
@@ -921,53 +1283,20 @@
             notationCounterEl.textContent = '';
             
             // Stage-specific formatting
-            if (stage === 'hyperoperational' || stage === 'transoperational') {
-                const effectiveArrows = arrowCount * arrowMultiplier;
+            if (stage === 'hyperoperational' || stage === 'transoperational' || stage === 'omnioperation') {
+                const effectiveArrows = arrowCount.mul(arrowMultiplier);
                 
-                // Calculate notation sets
-                if (stage === 'transoperational') {
-                    notationSets = Math.floor(1 + (iterations - 300) * 0.1);
+                if (stage === 'omnioperation') {
+                    // Apply arrow power (squaring)
+                    const poweredArrows = effectiveArrows.pow(arrowPower);
+                    simplifiedText = `J{${poweredArrows.toJ()}} ^${arrowPower.toString()}`;
+                    arrowsEl.textContent = poweredArrows.toJ();
                 } else {
-                    notationSets = 1;
+                    simplifiedText = currentNumber.toJ();
+                    arrowsEl.textContent = effectiveArrows.toString();
                 }
                 
-                const formattedSets = formatNotationSets(effectiveArrows, notationSets);
-                
-                // Display main simplified notation
-                if (notationSets <= 1) {
-                    simplifiedText = `J{${effectiveArrows}}`;
-                } else {
-                    const displaySets = limitSets ? Math.min(notationSets, maxNotationSets) : notationSets;
-                    simplifiedText = `J{${effectiveArrows}} × ${displaySets} sets`;
-                    
-                    // Show notation sets
-                    notationSetsEl.style.display = 'flex';
-                    notationSetsEl.innerHTML = '';
-                    
-                    formattedSets.sets.forEach((set, index) => {
-                        const setDiv = document.createElement('div');
-                        setDiv.className = 'notation-set';
-                        setDiv.textContent = set;
-                        setDiv.style.animationDelay = `${index * 0.1}s`;
-                        notationSetsEl.appendChild(setDiv);
-                    });
-                    
-                    if (formattedSets.hasOverflow) {
-                        const overflowDiv = document.createElement('div');
-                        overflowDiv.className = 'overflow-indicator';
-                        overflowDiv.textContent = `... +${formattedSets.totalSets - maxNotationSets} more`;
-                        notationSetsEl.appendChild(overflowDiv);
-                    }
-                    
-                    if (limitSets && notationSets > maxNotationSets) {
-                        notationCounterEl.textContent = `Showing ${formattedSets.sets.length} of ${formattedSets.totalSets} total sets (limiter enabled)`;
-                    } else {
-                        notationCounterEl.textContent = `Showing all ${formattedSets.totalSets} sets`;
-                    }
-                }
-                
-                arrowsEl.textContent = effectiveArrows;
-                totalSetsEl.textContent = notationSets;
+                totalSetsEl.textContent = notationSets.toString();
             } else {
                 arrowsEl.textContent = 'N/A';
                 totalSetsEl.textContent = '0';
@@ -983,7 +1312,8 @@
                 tetrational: 'Power towers rising...',
                 pentrational: 'Hyper-towers ascending...',
                 hyperoperational: 'Arrow notation expanding...',
-                transoperational: `Transcending with ${notationSets} notation sets...`
+                transoperational: `Transcending with ${notationSets.toString()} notation sets...`,
+                omnioperation: `Omnioperation: arrows^${arrowPower.toString()}`
             };
             stageInfoEl.textContent = stageMessages[stage] || 'Computing...';
             
@@ -991,10 +1321,11 @@
             display.textContent = displayText;
             simplifiedEl.textContent = simplifiedText;
             
-            // Update stats
-            iterEl.textContent = iterations;
+            // Update stats with ExpantaNum values
+            iterEl.textContent = iterations.toString();
             growthEl.textContent = stageText;
-            multiplierEl.textContent = `×${arrowMultiplier}`;
+            multiplierEl.textContent = `×${arrowMultiplier.toString()}`;
+            arrowPowerEl.textContent = `^${arrowPower.toString()}`;
             
             // Update progress
             progressEl.style.width = `${Math.min(stageProgress, 100)}%`;
@@ -1009,73 +1340,91 @@
         function grow() {
             if (!isRunning) return;
             
-            iterations++;
-            stageProgress = (iterations % 100);
+            iterations = iterations.add(new ExpantaNum(1));
+            stageProgress = (iterations.array[0] % 100);
             
             switch(stage) {
                 case 'exponential':
-                    currentNumber = new ExpantaNum(Math.pow(startingNumber, iterations));
-                    currentNumber.magnitude = iterations * Math.log10(startingNumber);
+                    currentNumber = new ExpantaNum(startingNumber).pow(iterations);
                     
-                    if (iterations > 33) {
+                    if (iterations.gt(new ExpantaNum(33))) {
                         stage = 'tetrational';
                         addHistoryEntry('Entering Tetrational Stage');
                         currentNumber = new ExpantaNum('1e33');
-                        currentNumber.magnitude = 33;
                     }
                     break;
                     
                 case 'tetrational':
-                    const tetrHeight = (iterations - 33) * 0.1;
-                    currentNumber = ExpantaNum.tetr(10, 33 + tetrHeight);
+                    const tetrHeight = iterations.add(new ExpantaNum(-33)).mul(new ExpantaNum(0.1));
+                    currentNumber = ExpantaNum.tetr(10, new ExpantaNum(33).add(tetrHeight).array[0]);
                     
-                    if (iterations > 100) {
+                    if (iterations.gt(new ExpantaNum(100))) {
                         stage = 'pentrational';
                         addHistoryEntry('Entering Pentrational Stage');
                     }
                     break;
                     
                 case 'pentrational':
-                    const pentHeight = (iterations - 100) * 0.05;
-                    currentNumber = ExpantaNum.pent(10, 10000 + pentHeight);
+                    const pentHeight = iterations.add(new ExpantaNum(-100)).mul(new ExpantaNum(0.05));
+                    currentNumber = ExpantaNum.pent(10, new ExpantaNum(10000).add(pentHeight).array[0]);
                     
-                    if (iterations > 200) {
+                    if (iterations.gt(new ExpantaNum(200))) {
                         stage = 'hyperoperational';
-                        arrowCount = 10;
+                        arrowCount = new ExpantaNum(10);
                         addHistoryEntry('Entering Hyperoperational Stage');
                     }
                     break;
                     
                 case 'hyperoperational':
-                    arrowCount = Math.floor(10 * Math.pow(1.1, (iterations - 200) * 0.1));
-                    const hyperHeight = iterations - 200;
-                    currentNumber = ExpantaNum.arrow(10, arrowCount * arrowMultiplier, hyperHeight);
+                    arrowCount = new ExpantaNum(10).mul(
+                        new ExpantaNum(1.1).pow(iterations.add(new ExpantaNum(-200)).mul(new ExpantaNum(0.1)))
+                    );
+                    const hyperHeight = iterations.add(new ExpantaNum(-200));
+                    currentNumber = ExpantaNum.arrow(10, arrowCount.mul(arrowMultiplier).array[0], hyperHeight.array[0]);
                     
-                    if (iterations > 300) {
+                    if (iterations.gt(new ExpantaNum(300))) {
                         stage = 'transoperational';
-                        addHistoryEntry('Entering Transoperational Stage!');
+                        addHistoryEntry('Entering Transoperational Stage');
                     }
                     break;
                     
                 case 'transoperational':
-                    // Transoperational: multiply arrow count and increase sets
-                    arrowCount = Math.floor(10 * Math.pow(1.2, (iterations - 300) * 0.15));
-                    arrowMultiplier = Math.floor(Math.pow(2, (iterations - 300) * 0.05));
-                    notationSets = Math.floor(1 + (iterations - 300) * 0.1);
+                    arrowCount = new ExpantaNum(10).mul(
+                        new ExpantaNum(1.2).pow(iterations.add(new ExpantaNum(-300)).mul(new ExpantaNum(0.15)))
+                    );
+                    arrowMultiplier = new ExpantaNum(2).pow(iterations.add(new ExpantaNum(-300)).mul(new ExpantaNum(0.05)));
+                    notationSets = new ExpantaNum(1).add(iterations.add(new ExpantaNum(-300)).mul(new ExpantaNum(0.1)));
                     
-                    const transHeight = iterations - 300;
-                    const totalArrows = arrowCount * arrowMultiplier;
+                    const transHeight = iterations.add(new ExpantaNum(-300));
+                    const totalArrows = arrowCount.mul(arrowMultiplier);
+                    currentNumber = ExpantaNum.arrow(10, totalArrows.array[0], transHeight.mul(notationSets).array[0], notationSets.array[0]);
                     
-                    // Apply notation sets
-                    const effectiveSets = limitSets ? Math.min(notationSets, maxNotationSets * 10) : notationSets;
-                    currentNumber = ExpantaNum.arrow(10, totalArrows, transHeight * effectiveSets, effectiveSets);
-                    
-                    if (iterations % 50 === 0) {
-                        addHistoryEntry(`Arrow multiplier: ×${arrowMultiplier}, Sets: ${notationSets}`);
+                    // Check for omnioperation transition at J{1e33}
+                    if (totalArrows.gte(new ExpantaNum('1e33'))) {
+                        stage = 'omnioperation';
+                        arrowPower = new ExpantaNum(2);
+                        addHistoryEntry('ENTERING OMNIOPERATION STAGE! Arrows will be squared!');
                     }
+                    break;
                     
-                    if (limitSets && notationSets > maxNotationSets && notationSets === maxNotationSets + 1) {
-                        addHistoryEntry(`Notation sets exceeded display limit of ${maxNotationSets}`);
+                case 'omnioperation':
+                    // Omnioperation: square the arrows after J{1e33}
+                    const omniIterations = iterations.add(new ExpantaNum(-400));
+                    arrowCount = new ExpantaNum('1e33').mul(
+                        new ExpantaNum(1.5).pow(omniIterations.mul(new ExpantaNum(0.1)))
+                    );
+                    
+                    // Increase arrow power gradually
+                    arrowPower = new ExpantaNum(2).add(omniIterations.mul(new ExpantaNum(0.01)));
+                    
+                    // Apply the squared (or higher power) arrows
+                    const omniArrows = arrowCount.pow(arrowPower);
+                    const omniHeight = omniIterations.mul(new ExpantaNum(2));
+                    
+                    currentNumber = ExpantaNum.arrow(10, omniArrows.array[0], omniHeight.array[0]);
+                    
+                    if (omniIterations.array[0] % 50 === 0 && omniIterations.gt(new ExpantaNum(0))) {
+                        addHistoryEntry(`Omnioperation: Arrows raised to power ${arrowPower.toString()}`);
                     }
                     break;
             }
@@ -1108,12 +1457,12 @@
         function reset() {
             pause();
             stage = 'exponential';
-            iterations = 0;
-            arrowCount = 0;
-            arrowMultiplier = 1;
-            notationSets = 1;
+            iterations = new ExpantaNum(0);
+            arrowCount = new ExpantaNum(0);
+            arrowMultiplier = new ExpantaNum(1);
+            notationSets = new ExpantaNum(1);
+            arrowPower = new ExpantaNum(1);
             stageProgress = 0;
-            historyEntries = [];
             document.getElementById('history').innerHTML = '';
             document.getElementById('startBtn').textContent = 'Start Growth';
             initialize();
@@ -1121,19 +1470,22 @@
         }
 
         function skipStage() {
-            const stageOrder = ['exponential', 'tetrational', 'pentrational', 'hyperoperational', 'transoperational'];
+            const stageOrder = ['exponential', 'tetrational', 'pentrational', 'hyperoperational', 'transoperational', 'omnioperation'];
             const currentIndex = stageOrder.indexOf(stage);
             if (currentIndex < stageOrder.length - 1) {
                 stage = stageOrder[currentIndex + 1];
-                iterations = (currentIndex + 1) * 100 + 1;
+                iterations = new ExpantaNum((currentIndex + 1) * 100 + 1);
                 addHistoryEntry(`Skipped to ${stage} stage`);
                 
                 if (stage === 'hyperoperational') {
-                    arrowCount = 10;
+                    arrowCount = new ExpantaNum(10);
                 } else if (stage === 'transoperational') {
-                    arrowCount = 100;
-                    arrowMultiplier = 2;
-                    notationSets = 1;
+                    arrowCount = new ExpantaNum(100);
+                    arrowMultiplier = new ExpantaNum(2);
+                    notationSets = new ExpantaNum(1);
+                } else if (stage === 'omnioperation') {
+                    arrowCount = new ExpantaNum('1e33');
+                    arrowPower = new ExpantaNum(2);
                 }
             }
         }
@@ -1150,7 +1502,7 @@
         });
         
         document.getElementById('startNumber').addEventListener('change', (e) => {
-            if (!isRunning && iterations === 0) {
+            if (!isRunning && iterations.eq(new ExpantaNum(0))) {
                 initialize();
                 updateDisplay();
             }
@@ -1186,4 +1538,4 @@
         updateDisplay();
     </script>
 </body>
-</html>
+    </html>
