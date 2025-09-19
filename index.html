@@ -5,6 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyperoperational Growth Visualizer</title>
     <style>
+        :root {
+            /* Default Red Theme */
+            --primary-bg-1: #1a0000;
+            --primary-bg-2: #330000;
+            --primary-bg-3: #4d0000;
+            --primary-color: #ff6b6b;
+            --secondary-color: #ff9999;
+            --accent-color: #ff1744;
+            --container-bg: rgba(40, 0, 0, 0.9);
+            --element-bg: rgba(139, 0, 0, 0.2);
+            --border-color: rgba(255, 0, 0, 0.3);
+            --glow-color: rgba(255, 0, 0, 0.5);
+            --button-bg-1: #8b0000;
+            --button-bg-2: #dc143c;
+        }
+
+        .theme-blue {
+            --primary-bg-1: #00001a;
+            --primary-bg-2: #000033;
+            --primary-bg-3: #00004d;
+            --primary-color: #6b9fff;
+            --secondary-color: #99b3ff;
+            --accent-color: #1764ff;
+            --container-bg: rgba(0, 0, 40, 0.9);
+            --element-bg: rgba(0, 0, 139, 0.2);
+            --border-color: rgba(0, 100, 255, 0.3);
+            --glow-color: rgba(0, 100, 255, 0.5);
+            --button-bg-1: #00008b;
+            --button-bg-2: #1443dc;
+        }
+
+        .theme-green {
+            --primary-bg-1: #001a00;
+            --primary-bg-2: #003300;
+            --primary-bg-3: #004d00;
+            --primary-color: #6bff6b;
+            --secondary-color: #99ff99;
+            --accent-color: #17ff44;
+            --container-bg: rgba(0, 40, 0, 0.9);
+            --element-bg: rgba(0, 139, 0, 0.2);
+            --border-color: rgba(0, 255, 0, 0.3);
+            --glow-color: rgba(0, 255, 0, 0.5);
+            --button-bg-1: #008b00;
+            --button-bg-2: #14dc14;
+        }
+
+        .theme-purple {
+            --primary-bg-1: #1a001a;
+            --primary-bg-2: #330033;
+            --primary-bg-3: #4d004d;
+            --primary-color: #ff6bff;
+            --secondary-color: #ff99ff;
+            --accent-color: #ff17ff;
+            --container-bg: rgba(40, 0, 40, 0.9);
+            --element-bg: rgba(139, 0, 139, 0.2);
+            --border-color: rgba(255, 0, 255, 0.3);
+            --glow-color: rgba(255, 0, 255, 0.5);
+            --button-bg-1: #8b008b;
+            --button-bg-2: #dc14dc;
+        }
+
+        .theme-orange {
+            --primary-bg-1: #1a0a00;
+            --primary-bg-2: #331500;
+            --primary-bg-3: #4d2000;
+            --primary-color: #ff9b6b;
+            --secondary-color: #ffb399;
+            --accent-color: #ff7717;
+            --container-bg: rgba(40, 20, 0, 0.9);
+            --element-bg: rgba(139, 69, 0, 0.2);
+            --border-color: rgba(255, 128, 0, 0.3);
+            --glow-color: rgba(255, 128, 0, 0.5);
+            --button-bg-1: #8b4500;
+            --button-bg-2: #dc7814;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,10 +89,11 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #1a0000, #330000, #4d0000);
+            background: linear-gradient(135deg, var(--primary-bg-1), var(--primary-bg-2), var(--primary-bg-3));
             min-height: 100vh;
-            color: #ff6b6b;
+            color: var(--primary-color);
             padding: 2rem 0;
+            transition: all 0.5s ease;
         }
 
         body::before {
@@ -27,15 +104,16 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 0, 0, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(220, 20, 60, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, var(--border-color) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--border-color) 0%, transparent 50%);
             animation: pulse 10s infinite;
             pointer-events: none;
+            opacity: 0.3;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
         }
 
         .main-container {
@@ -47,18 +125,18 @@
         }
 
         .container {
-            background: rgba(40, 0, 0, 0.9);
+            background: var(--container-bg);
             padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
-            border: 2px solid rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 50px var(--glow-color);
+            border: 2px solid var(--border-color);
             backdrop-filter: blur(10px);
             margin-bottom: 2rem;
         }
 
         h1 {
             font-size: 2.5rem;
-            background: linear-gradient(45deg, #ff0000, #ff6b6b, #ff1744);
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color), var(--secondary-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -72,6 +150,63 @@
             50% { filter: brightness(1.2); }
         }
 
+        .settings-panel {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--container-bg);
+            border-left: 2px solid var(--border-color);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .settings-panel.open {
+            right: 0;
+        }
+
+        .settings-toggle {
+            position: fixed;
+            right: 20px;
+            top: 20px;
+            z-index: 1001;
+            padding: 0.5rem 1rem;
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .theme-selector {
+            margin-bottom: 2rem;
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            background: var(--element-bg);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-option:hover {
+            background: var(--border-color);
+        }
+
+        .theme-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
         .controls-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -80,14 +215,14 @@
         }
 
         .control-group {
-            background: rgba(139, 0, 0, 0.2);
+            background: var(--element-bg);
             padding: 1rem;
             border-radius: 10px;
-            border: 1px solid rgba(255, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
         }
 
         .control-label {
-            color: #ff9999;
+            color: var(--secondary-color);
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
             text-transform: uppercase;
@@ -97,17 +232,29 @@
         input[type="number"], input[type="range"], select {
             width: 100%;
             padding: 0.5rem;
-            background: rgba(40, 0, 0, 0.8);
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
             border-radius: 5px;
-            color: #ff6b6b;
+            color: var(--primary-color);
             font-family: inherit;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
         }
 
         input[type="range"] {
             -webkit-appearance: none;
             height: 6px;
-            background: rgba(139, 0, 0, 0.3);
+            background: var(--element-bg);
             outline: none;
         }
 
@@ -115,20 +262,20 @@
             -webkit-appearance: none;
             width: 16px;
             height: 16px;
-            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
             border-radius: 50%;
             cursor: pointer;
         }
 
         .speed-display {
-            color: #ff4444;
+            color: var(--accent-color);
             margin-top: 0.5rem;
             font-weight: bold;
         }
 
         .stage-indicator {
             font-size: 1.4rem;
-            color: #ff9999;
+            color: var(--secondary-color);
             margin-bottom: 1rem;
             text-transform: uppercase;
             letter-spacing: 3px;
@@ -137,12 +284,12 @@
 
         .number-display {
             font-size: 1.8rem;
-            color: #ff3333;
+            color: var(--primary-color);
             margin: 2rem 0;
             padding: 1.5rem;
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.2), rgba(255, 0, 0, 0.1));
+            background: linear-gradient(135deg, var(--element-bg), var(--border-color));
             border-radius: 10px;
-            border: 1px solid rgba(255, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
             word-break: break-all;
             min-height: 100px;
             display: flex;
@@ -153,14 +300,35 @@
             overflow-y: hidden;
         }
 
+        .approximation-container {
+            background: var(--element-bg);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .approximation-label {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .approximation-display {
+            font-size: 1.4rem;
+            color: var(--accent-color);
+            font-weight: bold;
+            word-break: break-all;
+        }
+
         .simplified-notation {
             font-size: 2.5rem;
-            color: #ff1744;
+            color: var(--accent-color);
             font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            text-shadow: 0 0 20px var(--glow-color);
             text-align: center;
             padding: 1rem;
-            background: rgba(40, 0, 0, 0.5);
+            background: var(--element-bg);
             border-radius: 10px;
             margin: 1rem 0;
         }
@@ -172,18 +340,18 @@
             gap: 0.5rem;
             margin-top: 1rem;
             padding: 1rem;
-            background: rgba(139, 0, 0, 0.1);
+            background: var(--element-bg);
             border-radius: 10px;
             max-height: 150px;
             overflow-y: auto;
         }
 
         .notation-set {
-            background: rgba(255, 0, 0, 0.1);
+            background: var(--border-color);
             padding: 0.5rem 1rem;
             border-radius: 20px;
-            border: 1px solid rgba(255, 0, 0, 0.3);
-            color: #ff6b6b;
+            border: 1px solid var(--border-color);
+            color: var(--primary-color);
             font-size: 1.1rem;
             animation: fadeIn 0.5s ease;
         }
@@ -194,7 +362,7 @@
         }
 
         .overflow-indicator {
-            color: #ff1744;
+            color: var(--accent-color);
             font-size: 1.5rem;
             font-weight: bold;
             animation: blink 1s infinite;
@@ -208,7 +376,7 @@
         .history-section {
             max-height: 300px;
             overflow-y: auto;
-            background: rgba(40, 0, 0, 0.5);
+            background: var(--element-bg);
             border-radius: 10px;
             padding: 1rem;
             margin-top: 2rem;
@@ -217,11 +385,11 @@
         .history-entry {
             padding: 0.5rem;
             margin-bottom: 0.5rem;
-            background: rgba(139, 0, 0, 0.1);
-            border-left: 3px solid #ff0000;
+            background: var(--container-bg);
+            border-left: 3px solid var(--accent-color);
             border-radius: 5px;
             font-size: 0.9rem;
-            color: #ff9999;
+            color: var(--secondary-color);
         }
 
         /* Scrollbar styling */
@@ -231,17 +399,17 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: rgba(40, 0, 0, 0.5);
+            background: var(--element-bg);
             border-radius: 5px;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #8b0000, #ff0000);
+            background: linear-gradient(135deg, var(--button-bg-1), var(--accent-color));
             border-radius: 5px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #ff0000, #ff6b6b);
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
         }
 
         .stats {
@@ -253,28 +421,28 @@
 
         .stat-box {
             padding: 1rem;
-            background: rgba(139, 0, 0, 0.2);
+            background: var(--element-bg);
             border-radius: 8px;
-            border: 1px solid rgba(255, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
             text-align: center;
         }
 
         .stat-label {
             font-size: 0.8rem;
-            color: #ff9999;
+            color: var(--secondary-color);
             margin-bottom: 0.5rem;
         }
 
         .stat-value {
             font-size: 1.2rem;
-            color: #ff4444;
+            color: var(--accent-color);
             font-weight: bold;
         }
 
         .progress-bar {
             width: 100%;
             height: 10px;
-            background: rgba(139, 0, 0, 0.3);
+            background: var(--element-bg);
             border-radius: 5px;
             overflow: hidden;
             margin-top: 1rem;
@@ -282,7 +450,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #8b0000, #ff0000, #ff6b6b);
+            background: linear-gradient(90deg, var(--button-bg-1), var(--accent-color), var(--primary-color));
             width: 0%;
             transition: width 0.3s ease;
         }
@@ -297,20 +465,20 @@
 
         button {
             padding: 0.8rem 2rem;
-            background: linear-gradient(135deg, #8b0000, #dc143c);
+            background: linear-gradient(135deg, var(--button-bg-1), var(--button-bg-2));
             color: #ffffff;
             border: none;
             border-radius: 25px;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+            box-shadow: 0 4px 15px var(--glow-color);
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
-            background: linear-gradient(135deg, #dc143c, #ff0000);
+            box-shadow: 0 6px 20px var(--glow-color);
+            background: linear-gradient(135deg, var(--button-bg-2), var(--accent-color));
         }
 
         button:active {
@@ -326,13 +494,13 @@
             text-align: center;
             margin-top: 1rem;
             font-size: 0.9rem;
-            color: #ff9999;
+            color: var(--secondary-color);
             opacity: 0.8;
         }
 
         .notation-counter {
             text-align: center;
-            color: #ff6b6b;
+            color: var(--primary-color);
             font-size: 0.9rem;
             margin-top: 0.5rem;
             opacity: 0.8;
@@ -340,6 +508,48 @@
     </style>
 </head>
 <body>
+    <div class="settings-toggle" onclick="toggleSettings()">⚙️ Settings</div>
+    
+    <div class="settings-panel" id="settingsPanel">
+        <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">Settings</h2>
+        
+        <div class="theme-selector">
+            <div class="control-label">Color Theme</div>
+            <div class="theme-option" onclick="setTheme('')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #ff0000, #ff6b6b)"></div>
+                <span>Red (Default)</span>
+            </div>
+            <div class="theme-option" onclick="setTheme('theme-blue')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #0000ff, #6b9fff)"></div>
+                <span>Blue</span>
+            </div>
+            <div class="theme-option" onclick="setTheme('theme-green')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #00ff00, #6bff6b)"></div>
+                <span>Green</span>
+            </div>
+            <div class="theme-option" onclick="setTheme('theme-purple')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #ff00ff, #ff6bff)"></div>
+                <span>Purple</span>
+            </div>
+            <div class="theme-option" onclick="setTheme('theme-orange')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #ff8800, #ff9b6b)"></div>
+                <span>Orange</span>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <div class="control-label">Display Options</div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="showApproximations" checked>
+                <label for="showApproximations">Show Approximations</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="enableSetLimiter" checked>
+                <label for="enableSetLimiter">Enable Set Limiter</label>
+            </div>
+        </div>
+    </div>
+
     <div class="main-container">
         <h1>Hyperoperational Growth Visualizer</h1>
         
@@ -367,6 +577,10 @@
                 <div class="control-group">
                     <div class="control-label">Max Notation Sets</div>
                     <input type="number" id="maxSets" value="10" min="1" max="20">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="limitSetsToggle" checked>
+                        <label for="limitSetsToggle">Limit Sets Display</label>
+                    </div>
                 </div>
             </div>
             
@@ -377,6 +591,11 @@
             </div>
             
             <div class="simplified-notation" id="simplifiedNotation">3</div>
+            
+            <div class="approximation-container" id="approximationContainer" style="display: block;">
+                <div class="approximation-label">Approximation:</div>
+                <div class="approximation-display" id="approximation">3</div>
+            </div>
             
             <div class="notation-sets" id="notationSets" style="display: none;">
                 <!-- Notation sets will be added here -->
@@ -442,10 +661,12 @@
                     this.array = [0, 0, 0];
                     this.arrows = 0;
                     this.sets = 1;
+                    this.magnitude = 0;
                     if (typeof value === 'string') {
                         this.parseString(value);
                     } else if (typeof value === 'number') {
                         this.array[0] = Math.log10(Math.max(1, value));
+                        this.magnitude = Math.floor(this.array[0]);
                     }
                 }
                 
@@ -453,6 +674,7 @@
                     if (str.includes('e')) {
                         const parts = str.split('e');
                         this.array[0] = parseFloat(parts[1]) || 0;
+                        this.magnitude = Math.floor(this.array[0]);
                     }
                 }
                 
@@ -460,6 +682,7 @@
                     const result = new ExpantaNum(`1e${Math.pow(10, height)}`);
                     result.arrows = 0;
                     result.sets = 1;
+                    result.magnitude = height;
                     return result;
                 }
                 
@@ -467,6 +690,7 @@
                     const result = new ExpantaNum(`1e${Math.pow(10, height * 10)}`);
                     result.arrows = 0;
                     result.sets = 1;
+                    result.magnitude = height * 10;
                     return result;
                 }
                 
@@ -474,6 +698,7 @@
                     const result = new ExpantaNum(`1e${Math.pow(10, arrows * height)}`);
                     result.arrows = arrows;
                     result.sets = sets;
+                    result.magnitude = arrows * height;
                     return result;
                 }
                 
@@ -497,6 +722,45 @@
             }
         }
 
+        // Approximation notations (30+ different notations)
+        const approximations = [
+            { threshold: 1e10, format: (n) => `10^10 (Googol's root)` },
+            { threshold: 1e15, format: (n) => `10{{1}}9e15` },
+            { threshold: 1e20, format: (n) => `10^^3.5` },
+            { threshold: 1e30, format: (n) => `10{{1}}10^30` },
+            { threshold: 1e40, format: (n) => `10^^^2.5` },
+            { threshold: 1e50, format: (n) => `10{{2}}50` },
+            { threshold: 1e60, format: (n) => `10^^10^^2` },
+            { threshold: 1e70, format: (n) => `10{{2}}10^70` },
+            { threshold: 1e80, format: (n) => `10^^^^2` },
+            { threshold: 1e90, format: (n) => `10{{3}}90` },
+            { threshold: 1e100, format: (n) => `Googol = 10^100` },
+            { threshold: 1e120, format: (n) => `10{{3}}10^120` },
+            { threshold: 1e150, format: (n) => `10{4}3` },
+            { threshold: 1e200, format: (n) => `10{{4}}200` },
+            { threshold: 1e300, format: (n) => `10^^^3 territory` },
+            { threshold: 1e500, format: (n) => `10{5}2.5` },
+            { threshold: 1e1000, format: (n) => `10^^10^^10` },
+            { threshold: 1e3003, format: (n) => `Googolplex = 10^10^100` },
+            { threshold: 1e5000, format: (n) => `10{6}2` },
+            { threshold: 1e10000, format: (n) => `10{{5}}10000` },
+            { threshold: 'e1e5', format: (n) => `10^^^4 realm` },
+            { threshold: 'e1e6', format: (n) => `10{7}2` },
+            { threshold: 'e1e7', format: (n) => `10^^^^3` },
+            { threshold: 'e1e8', format: (n) => `10{8}2` },
+            { threshold: 'e1e9', format: (n) => `10{9}2` },
+            { threshold: 'e1e10', format: (n) => `Googolplexian = 10^10^10^100` },
+            { threshold: 'e1e15', format: (n) => `10{10}2` },
+            { threshold: 'e1e20', format: (n) => `10^^100` },
+            { threshold: 'e1e30', format: (n) => `10{15}2` },
+            { threshold: 'e1e50', format: (n) => `10^^^10` },
+            { threshold: 'e1e100', format: (n) => `Googolduplex = 10^10^googol` },
+            { threshold: 'J{10}', format: (n) => `10→10→10` },
+            { threshold: 'J{100}', format: (n) => `10→→100` },
+            { threshold: 'J{1000}', format: (n) => `10→→→10` },
+            { threshold: 'J{10000}', format: (n) => `Graham's Number vicinity` }
+        ];
+
         // Global variables
         let currentNumber;
         let stage = 'exponential';
@@ -511,23 +775,81 @@
         let startingNumber = 3;
         let autoScroll = true;
         let maxNotationSets = 10;
+        let limitSets = true;
+        let showApproximations = true;
+        let currentTheme = '';
         let historyEntries = [];
+
+        // Theme management
+        function setTheme(themeName) {
+            document.body.className = themeName;
+            currentTheme = themeName;
+            localStorage.setItem('selectedTheme', themeName);
+        }
+
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('open');
+        }
 
         // Initialize
         function initialize() {
             startingNumber = parseInt(document.getElementById('startNumber').value) || 3;
             maxNotationSets = parseInt(document.getElementById('maxSets').value) || 10;
+            limitSets = document.getElementById('limitSetsToggle').checked;
+            showApproximations = document.getElementById('showApproximations').checked;
             currentNumber = new ExpantaNum(startingNumber);
             growthSpeed = parseInt(document.getElementById('speedControl').value);
             autoScroll = document.getElementById('autoScroll').value === 'on';
             
+            // Load saved theme
+            const savedTheme = localStorage.getItem('selectedTheme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            }
+            
             addHistoryEntry(`Initialized with value: ${startingNumber}`);
+        }
+
+        // Get approximation for current number
+        function getApproximation(number) {
+            if (!showApproximations) return null;
+            
+            const magnitude = number.magnitude || 0;
+            const arrows = number.arrows || 0;
+            
+            // Check for arrow notation first
+            if (arrows > 0) {
+                for (let i = approximations.length - 1; i >= 0; i--) {
+                    if (approximations[i].threshold.toString().startsWith('J{')) {
+                        const thresholdArrows = parseInt(approximations[i].threshold.match(/\d+/)[0]);
+                        if (arrows >= thresholdArrows) {
+                            return approximations[i].format(number);
+                        }
+                    }
+                }
+            }
+            
+            // Check magnitude-based approximations
+            for (let i = approximations.length - 1; i >= 0; i--) {
+                const threshold = approximations[i].threshold;
+                if (typeof threshold === 'number' && magnitude >= Math.log10(threshold)) {
+                    return approximations[i].format(number);
+                } else if (typeof threshold === 'string' && threshold.startsWith('e')) {
+                    const expValue = parseFloat(threshold.substring(1));
+                    if (magnitude >= expValue) {
+                        return approximations[i].format(number);
+                    }
+                }
+            }
+            
+            return null;
         }
 
         // Format notation sets
         function formatNotationSets(arrows, sets) {
-            const maxSets = parseInt(document.getElementById('maxSets').value) || 10;
-            const actualSets = Math.min(sets, maxSets);
+            const effectiveMaxSets = limitSets ? maxNotationSets : sets;
+            const actualSets = Math.min(sets, effectiveMaxSets);
             const notationArray = [];
             
             for (let i = 0; i < actualSets; i++) {
@@ -536,7 +858,7 @@
             
             return {
                 sets: notationArray,
-                hasOverflow: sets > maxSets,
+                hasOverflow: limitSets && sets > maxNotationSets,
                 totalSets: sets
             };
         }
@@ -563,6 +885,8 @@
         function updateDisplay() {
             const display = document.getElementById('display');
             const simplifiedEl = document.getElementById('simplifiedNotation');
+            const approximationEl = document.getElementById('approximation');
+            const approximationContainer = document.getElementById('approximationContainer');
             const notationSetsEl = document.getElementById('notationSets');
             const notationCounterEl = document.getElementById('notationCounter');
             const stageEl = document.getElementById('stage');
@@ -577,6 +901,20 @@
             // Format display
             let displayText = currentNumber.toString();
             let simplifiedText = displayText;
+            
+            // Handle approximations
+            if (showApproximations) {
+                const approx = getApproximation(currentNumber);
+                if (approx) {
+                    approximationEl.textContent = approx;
+                    approximationContainer.style.display = 'block';
+                } else {
+                    approximationEl.textContent = displayText;
+                    approximationContainer.style.display = 'block';
+                }
+            } else {
+                approximationContainer.style.display = 'none';
+            }
             
             // Handle notation sets display
             notationSetsEl.style.display = 'none';
@@ -599,7 +937,8 @@
                 if (notationSets <= 1) {
                     simplifiedText = `J{${effectiveArrows}}`;
                 } else {
-                    simplifiedText = `J{${effectiveArrows}} × ${Math.min(notationSets, maxNotationSets)} sets`;
+                    const displaySets = limitSets ? Math.min(notationSets, maxNotationSets) : notationSets;
+                    simplifiedText = `J{${effectiveArrows}} × ${displaySets} sets`;
                     
                     // Show notation sets
                     notationSetsEl.style.display = 'flex';
@@ -620,7 +959,11 @@
                         notationSetsEl.appendChild(overflowDiv);
                     }
                     
-                    notationCounterEl.textContent = `Showing ${formattedSets.sets.length} of ${formattedSets.totalSets} total sets`;
+                    if (limitSets && notationSets > maxNotationSets) {
+                        notationCounterEl.textContent = `Showing ${formattedSets.sets.length} of ${formattedSets.totalSets} total sets (limiter enabled)`;
+                    } else {
+                        notationCounterEl.textContent = `Showing all ${formattedSets.totalSets} sets`;
+                    }
                 }
                 
                 arrowsEl.textContent = effectiveArrows;
@@ -672,11 +1015,13 @@
             switch(stage) {
                 case 'exponential':
                     currentNumber = new ExpantaNum(Math.pow(startingNumber, iterations));
+                    currentNumber.magnitude = iterations * Math.log10(startingNumber);
                     
                     if (iterations > 33) {
                         stage = 'tetrational';
                         addHistoryEntry('Entering Tetrational Stage');
                         currentNumber = new ExpantaNum('1e33');
+                        currentNumber.magnitude = 33;
                     }
                     break;
                     
@@ -721,15 +1066,15 @@
                     const transHeight = iterations - 300;
                     const totalArrows = arrowCount * arrowMultiplier;
                     
-                    // Apply notation sets (limited to maxNotationSets for display)
-                    const effectiveSets = Math.min(notationSets, maxNotationSets * 10); // Internal limit
+                    // Apply notation sets
+                    const effectiveSets = limitSets ? Math.min(notationSets, maxNotationSets * 10) : notationSets;
                     currentNumber = ExpantaNum.arrow(10, totalArrows, transHeight * effectiveSets, effectiveSets);
                     
                     if (iterations % 50 === 0) {
                         addHistoryEntry(`Arrow multiplier: ×${arrowMultiplier}, Sets: ${notationSets}`);
                     }
                     
-                    if (notationSets > maxNotationSets && notationSets === maxNotationSets + 1) {
+                    if (limitSets && notationSets > maxNotationSets && notationSets === maxNotationSets + 1) {
                         addHistoryEntry(`Notation sets exceeded display limit of ${maxNotationSets}`);
                     }
                     break;
@@ -817,6 +1162,22 @@
         
         document.getElementById('maxSets').addEventListener('change', (e) => {
             maxNotationSets = parseInt(e.target.value) || 10;
+            updateDisplay();
+        });
+        
+        document.getElementById('limitSetsToggle').addEventListener('change', (e) => {
+            limitSets = e.target.checked;
+            updateDisplay();
+        });
+        
+        document.getElementById('showApproximations').addEventListener('change', (e) => {
+            showApproximations = e.target.checked;
+            updateDisplay();
+        });
+        
+        document.getElementById('enableSetLimiter').addEventListener('change', (e) => {
+            limitSets = e.target.checked;
+            document.getElementById('limitSetsToggle').checked = limitSets;
             updateDisplay();
         });
 
