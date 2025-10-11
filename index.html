@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyperoperational Growth Visualizer</title>
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts - Extended Collection -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Fira+Code:wght@300;400;600&family=JetBrains+Mono:wght@100;400;800&family=Roboto+Mono:wght@100;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Fira+Code:wght@300;400;600&family=JetBrains+Mono:wght@100;400;800&family=Roboto+Mono:wght@100;400;700&family=Source+Code+Pro:wght@300;600;900&family=IBM+Plex+Mono:wght@100;400;700&family=Ubuntu+Mono:wght@400;700&family=Inconsolata:wght@300;600;900&family=Overpass+Mono:wght@300;600;700&family=Share+Tech+Mono&family=VT323&family=Major+Mono+Display&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -33,12 +33,20 @@
             --text-primary: #ffffff;
         }
 
-        /* Font Themes */
+        /* Font Themes - 13 total */
         .font-orbitron { --font-main: 'Orbitron', monospace; }
         .font-space { --font-main: 'Space Mono', monospace; }
         .font-fira { --font-main: 'Fira Code', monospace; }
         .font-jetbrains { --font-main: 'JetBrains Mono', monospace; }
         .font-roboto { --font-main: 'Roboto Mono', monospace; }
+        .font-source { --font-main: 'Source Code Pro', monospace; }
+        .font-ibm { --font-main: 'IBM Plex Mono', monospace; }
+        .font-ubuntu { --font-main: 'Ubuntu Mono', monospace; }
+        .font-inconsolata { --font-main: 'Inconsolata', monospace; }
+        .font-overpass { --font-main: 'Overpass Mono', monospace; }
+        .font-share { --font-main: 'Share Tech Mono', monospace; }
+        .font-vt323 { --font-main: 'VT323', monospace; }
+        .font-major { --font-main: 'Major Mono Display', monospace; }
 
         /* Color Themes */
         .theme-blue {
@@ -511,6 +519,8 @@
         .font-selector {
             margin-top: 2rem;
             margin-bottom: 2rem;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .font-option {
@@ -894,40 +904,44 @@
                 <div class="notation-meaning">J notation raised to power x with modifier m</div>
             </div>
             <div class="notation-row">
-                <div class="notation-symbol">10{{n}}m</div>
-                <div class="notation-meaning">Chained arrow notation</div>
-            </div>
-            <div class="notation-row">
-                <div class="notation-symbol">10→n→m</div>
-                <div class="notation-meaning">Conway chained arrow notation</div>
-            </div>
-            <div class="notation-row">
                 <div class="notation-symbol">Googol</div>
                 <div class="notation-meaning">10^100</div>
             </div>
             <div class="notation-row">
-                <div class="notation-symbol">Googolplex</div>
-                <div class="notation-meaning">10^10^100</div>
+                <div class="notation-symbol">Millillion</div>
+                <div class="notation-meaning">10^3003</div>
             </div>
             <div class="notation-row">
-                <div class="notation-symbol">Googolplexian</div>
-                <div class="notation-meaning">10^10^10^100</div>
+                <div class="notation-symbol">Deckerplex</div>
+                <div class="notation-meaning">10^10^10</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Deka-taxis</div>
+                <div class="notation-meaning">10^^10</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Deka-enneaxis</div>
+                <div class="notation-meaning">10{9}10</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Boogol</div>
+                <div class="notation-meaning">10{100}10</div>
+            </div>
+            <div class="notation-row">
+                <div class="notation-symbol">Boogolplex</div>
+                <div class="notation-meaning">JJ1e100</div>
             </div>
             <div class="notation-row">
                 <div class="notation-symbol">Graham's Number</div>
-                <div class="notation-meaning">Extremely large number using 64 layers of arrows</div>
+                <div class="notation-meaning">J^64 3</div>
             </div>
             <div class="notation-row">
-                <div class="notation-symbol">TREE(3)</div>
-                <div class="notation-meaning">Number from graph theory, vastly exceeds Graham's</div>
+                <div class="notation-symbol">Mil-nil</div>
+                <div class="notation-meaning">J^1e6 1000000000</div>
             </div>
             <div class="notation-row">
-                <div class="notation-symbol">SCG(13)</div>
-                <div class="notation-meaning">Subcubic graph number, exceeds TREE(3)</div>
-            </div>
-            <div class="notation-row">
-                <div class="notation-symbol">Omnioperation</div>
-                <div class="notation-meaning">Arrows squared after J{1e33}</div>
+                <div class="notation-symbol">Faxil</div>
+                <div class="notation-meaning">J^1e15 65</div>
             </div>
         </div>
     </div>
@@ -936,26 +950,58 @@
         <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">Settings</h2>
         
         <div class="font-selector">
-            <div class="control-label">Font Theme</div>
+            <div class="control-label">Font Theme (13 Fonts)</div>
             <div class="font-option" onclick="setFont('font-orbitron')">
-                <div style="font-family: 'Orbitron', monospace;">Orbitron</div>
+                <div style="font-family: 'Orbitron', monospace;">Orbitron (Futuristic)</div>
                 <div class="font-preview" style="font-family: 'Orbitron', monospace;">123,456,789</div>
             </div>
             <div class="font-option" onclick="setFont('font-space')">
-                <div style="font-family: 'Space Mono', monospace;">Space Mono</div>
+                <div style="font-family: 'Space Mono', monospace;">Space Mono (Clean)</div>
                 <div class="font-preview" style="font-family: 'Space Mono', monospace;">123,456,789</div>
             </div>
             <div class="font-option" onclick="setFont('font-fira')">
-                <div style="font-family: 'Fira Code', monospace;">Fira Code</div>
+                <div style="font-family: 'Fira Code', monospace;">Fira Code (Coding)</div>
                 <div class="font-preview" style="font-family: 'Fira Code', monospace;">123,456,789</div>
             </div>
             <div class="font-option" onclick="setFont('font-jetbrains')">
-                <div style="font-family: 'JetBrains Mono', monospace;">JetBrains Mono</div>
+                <div style="font-family: 'JetBrains Mono', monospace;">JetBrains Mono (Modern)</div>
                 <div class="font-preview" style="font-family: 'JetBrains Mono', monospace;">123,456,789</div>
             </div>
             <div class="font-option" onclick="setFont('font-roboto')">
-                <div style="font-family: 'Roboto Mono', monospace;">Roboto Mono</div>
+                <div style="font-family: 'Roboto Mono', monospace;">Roboto Mono (Google)</div>
                 <div class="font-preview" style="font-family: 'Roboto Mono', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-source')">
+                <div style="font-family: 'Source Code Pro', monospace;">Source Code Pro (Adobe)</div>
+                <div class="font-preview" style="font-family: 'Source Code Pro', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-ibm')">
+                <div style="font-family: 'IBM Plex Mono', monospace;">IBM Plex Mono (Corporate)</div>
+                <div class="font-preview" style="font-family: 'IBM Plex Mono', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-ubuntu')">
+                <div style="font-family: 'Ubuntu Mono', monospace;">Ubuntu Mono (Linux)</div>
+                <div class="font-preview" style="font-family: 'Ubuntu Mono', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-inconsolata')">
+                <div style="font-family: 'Inconsolata', monospace;">Inconsolata (Terminal)</div>
+                <div class="font-preview" style="font-family: 'Inconsolata', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-overpass')">
+                <div style="font-family: 'Overpass Mono', monospace;">Overpass Mono (Red Hat)</div>
+                <div class="font-preview" style="font-family: 'Overpass Mono', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-share')">
+                <div style="font-family: 'Share Tech Mono', monospace;">Share Tech Mono (Tech)</div>
+                <div class="font-preview" style="font-family: 'Share Tech Mono', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-vt323')">
+                <div style="font-family: 'VT323', monospace;">VT323 (Retro Terminal)</div>
+                <div class="font-preview" style="font-family: 'VT323', monospace;">123,456,789</div>
+            </div>
+            <div class="font-option" onclick="setFont('font-major')">
+                <div style="font-family: 'Major Mono Display', monospace;">Major Mono (Artistic)</div>
+                <div class="font-preview" style="font-family: 'Major Mono Display', monospace;">123,456,789</div>
             </div>
         </div>
         
@@ -1212,7 +1258,7 @@
                                     this.layer = Math.floor(Math.log10(Math.max(1, arrows)));
                                 }
                             } else if (str.includes('J^')) {
-                                const match = str.match(/J\^(\d+)\s+(\d+)/);
+                                const match = str.match(/J\^([\d.e]+)\s+([\d.e]+)/);
                                 if (match) {
                                     const power = parseFloat(match[1]) || 1;
                                     const modifier = parseFloat(match[2]) || 1;
@@ -1263,7 +1309,6 @@
                         const h = typeof height === 'number' ? height : height.toNumber();
                         const s = typeof sets === 'number' ? sets : sets.toNumber();
                         
-                        // Prevent NaN and Infinity
                         const safeArrows = Math.min(Math.max(1, a), 1e10);
                         const safeHeight = Math.min(Math.max(1, h), 1e10);
                         const safeSets = Math.min(Math.max(1, s), 1000);
@@ -1306,7 +1351,6 @@
                         result.array[0] += o.array[0];
                         result.array[1] += o.array[1];
                         
-                        // Normalize
                         while (result.array[0] > 308) {
                             result.array[0] -= 308;
                             result.array[1]++;
@@ -1401,7 +1445,6 @@
                     }
                 }
                 
-                // Assign simulated class
                 EN = SimulatedExpantaNum;
             }
         }
@@ -1409,19 +1452,19 @@
         // Check library on load
         checkLibrary();
 
-        // Global variables with ExpantaNum
+        // Global variables - ALL using ExpantaNum
         let currentNumber;
         let iterations;
         let arrowCount;
         let arrowMultiplier;
         let notationSets;
         let arrowPower;
+        let stageProgress;
+        let growthSpeed;
+        let maxNotationSets;
         let stage = 'exponential';
-        let stageProgress = 0;
-        let growthSpeed = 100;
         let startingNumber = 3;
         let autoScroll = true;
-        let maxNotationSets = 10;
         let limitSets = true;
         let showApproximations = true;
         let currentTheme = '';
@@ -1437,18 +1480,23 @@
             arrowMultiplier = new EN(1);
             notationSets = new EN(1);
             arrowPower = new EN(1);
+            stageProgress = new EN(0);
+            growthSpeed = new EN(100);
+            maxNotationSets = new EN(10);
         }
 
-        // Extended approximations
+        // New approximations with specific large number names
         const getApproximations = () => [
-            { threshold: new EN('1e10'), format: (n) => `10^10 (Ten Billion)` },
-            { threshold: new EN('1e100'), format: (n) => `Googol = 10^100` },
-            { threshold: new EN('1e1000'), format: (n) => `10^^10^^10` },
-            { threshold: EN.tetr(10, 5), format: (n) => `10^^^4 realm` },
-            { threshold: EN.arrow(10, 10, 10), format: (n) => `10→10→10` },
-            { threshold: new EN('J{1e10}'), format: (n) => `Beyond Graham's Number` },
-            { threshold: new EN('J{1e33}'), format: (n) => `Omnioperation threshold` },
-            { threshold: new EN('J^2 100'), format: (n) => `J^2 100 (squared J notation)` }
+            { threshold: new EN('1e100'), format: (n) => `Googol (10^100)` },
+            { threshold: new EN('1e3003'), format: (n) => `Millillion (10^3003)` },
+            { threshold: EN.tetr(10, 3), format: (n) => `Deckerplex (10^10^10)` },
+            { threshold: EN.tetr(10, 10), format: (n) => `Deka-taxis (10^^10)` },
+            { threshold: EN.arrow(10, 9, 10), format: (n) => `Deka-enneaxis (10{9}10)` },
+            { threshold: EN.arrow(10, 100, 10), format: (n) => `Boogol (10{100}10)` },
+            { threshold: new EN('J{1e100}'), format: (n) => `Boogolplex (JJ1e100)` },
+            { threshold: new EN('J^64 3'), format: (n) => `Graham's Number (J^64 3)` },
+            { threshold: new EN('J^1e6 1000000000'), format: (n) => `Mil-nil (J^1e6 1000000000)` },
+            { threshold: new EN('J^1e15 65'), format: (n) => `Faxil (J^1e15 65)` }
         ];
 
         // Theme management
@@ -1490,13 +1538,14 @@
         // Initialize
         function initialize() {
             startingNumber = parseInt(document.getElementById('startNumber').value) || 3;
-            maxNotationSets = parseInt(document.getElementById('maxSets').value) || 10;
-            limitSets = document.getElementById('limitSetsToggle').checked;
-            showApproximations = document.getElementById('showApproximations').checked;
             
             initializeNumbers();
             
-            growthSpeed = parseInt(document.getElementById('speedControl').value);
+            maxNotationSets = new EN(parseInt(document.getElementById('maxSets').value) || 10);
+            growthSpeed = new EN(parseInt(document.getElementById('speedControl').value));
+            
+            limitSets = document.getElementById('limitSetsToggle').checked;
+            showApproximations = document.getElementById('showApproximations').checked;
             autoScroll = document.getElementById('autoScroll').value === 'on';
             
             const savedTheme = localStorage.getItem('selectedTheme');
@@ -1559,7 +1608,6 @@
                 const stageInfoEl = document.getElementById('stageInfo');
                 const progressEl = document.getElementById('progress');
                 
-                // Format display
                 let displayText = currentNumber.toString();
                 let simplifiedText = displayText;
                 
@@ -1586,11 +1634,9 @@
                     totalSetsEl.textContent = '0';
                 }
                 
-                // Update stage text
                 let stageText = stage.charAt(0).toUpperCase() + stage.slice(1);
                 stageEl.textContent = `Stage: ${stageText}`;
                 
-                // Update stage info
                 const stageMessages = {
                     exponential: 'Growing exponentially...',
                     tetrational: 'Power towers rising...',
@@ -1601,20 +1647,17 @@
                 };
                 stageInfoEl.textContent = stageMessages[stage] || 'Computing...';
                 
-                // Update displays
                 display.textContent = displayText;
                 simplifiedEl.textContent = simplifiedText;
                 
-                // Update stats
                 iterEl.textContent = iterations.toString();
                 growthEl.textContent = stageText;
                 multiplierEl.textContent = `×${arrowMultiplier.toString()}`;
                 arrowPowerEl.textContent = `^${arrowPower.toString()}`;
                 
-                // Update progress
-                progressEl.style.width = `${Math.min(stageProgress, 100)}%`;
+                const progressNum = stageProgress.toNumber ? stageProgress.toNumber() : 0;
+                progressEl.style.width = `${Math.min(progressNum, 100)}%`;
                 
-                // Auto scroll display if needed
                 if (autoScroll && display.scrollWidth > display.clientWidth) {
                     display.scrollLeft = display.scrollWidth;
                 }
@@ -1630,7 +1673,7 @@
             try {
                 iterations = iterations.add(new EN(1));
                 const iterNum = iterations.toNumber ? iterations.toNumber() : parseFloat(iterations.toString()) || 0;
-                stageProgress = (iterNum % 100);
+                stageProgress = new EN(iterNum % 100);
                 
                 switch(stage) {
                     case 'exponential':
@@ -1672,7 +1715,8 @@
                         arrowCount = new EN(10 * arrowGrowth);
                         
                         const arrowValue = arrowCount.toNumber ? arrowCount.toNumber() : 10;
-                        const effectiveArrows = arrowValue * (arrowMultiplier.toNumber ? arrowMultiplier.toNumber() : 1);
+                        const multValue = arrowMultiplier.toNumber ? arrowMultiplier.toNumber() : 1;
+                        const effectiveArrows = arrowValue * multValue;
                         currentNumber = EN.arrow(10, effectiveArrows, hyperIter);
                         
                         if (iterations.gt(new EN(300))) {
@@ -1693,7 +1737,6 @@
                         const transSets = notationSets.toNumber ? notationSets.toNumber() : 1;
                         currentNumber = EN.arrow(10, transArrows, transIter * transSets, transSets);
                         
-                        // Check for omnioperation
                         if (arrowCount.gt(new EN('1e33'))) {
                             stage = 'omnioperation';
                             arrowPower = new EN(2);
@@ -1727,15 +1770,14 @@
                 
             } catch(e) {
                 console.error('Growth error:', e);
-                // Fallback to prevent complete failure
                 currentNumber = new EN(`J{${iterations.toString()}}`);
                 updateDisplay();
             }
             
-            // Continue animation with adjustable speed
+            const speedNum = growthSpeed.toNumber ? growthSpeed.toNumber() : 100;
             animationId = setTimeout(() => {
                 requestAnimationFrame(grow);
-            }, growthSpeed);
+            }, speedNum);
         }
 
         // Control functions
@@ -1758,7 +1800,6 @@
         function reset() {
             pause();
             stage = 'exponential';
-            stageProgress = 0;
             document.getElementById('history').innerHTML = '';
             document.getElementById('startBtn').textContent = 'Start Growth';
             initialize();
@@ -1795,8 +1836,8 @@
         document.getElementById('skipStageBtn').addEventListener('click', skipStage);
         
         document.getElementById('speedControl').addEventListener('input', (e) => {
-            growthSpeed = parseInt(e.target.value);
-            document.getElementById('speedValue').textContent = growthSpeed;
+            growthSpeed = new EN(parseInt(e.target.value));
+            document.getElementById('speedValue').textContent = e.target.value;
         });
         
         document.getElementById('startNumber').addEventListener('change', (e) => {
@@ -1811,7 +1852,7 @@
         });
         
         document.getElementById('maxSets').addEventListener('change', (e) => {
-            maxNotationSets = parseInt(e.target.value) || 10;
+            maxNotationSets = new EN(parseInt(e.target.value) || 10);
             updateDisplay();
         });
         
