@@ -1141,12 +1141,12 @@
     </div>
 
     <!-- Include ExpantaNum library -->
-    <script src="ExpantaNum.min.js"></script>
+    <script src="path/to/ExpantaNum.js"></script>
     
     <script>
         // Library checker
         let libraryLoaded = false;
-        let ExpantaNumLib = null;
+        let EN = null;
 
         // Check if ExpantaNum library is loaded
         function checkLibrary() {
@@ -1154,7 +1154,7 @@
             
             if (typeof ExpantaNum !== 'undefined') {
                 libraryLoaded = true;
-                ExpantaNumLib = ExpantaNum;
+                EN = ExpantaNum;
                 statusEl.textContent = 'ExpantaNum: Loaded ✓';
                 statusEl.classList.add('loaded');
                 console.log('ExpantaNum library loaded successfully');
@@ -1167,6 +1167,10 @@
                 // Create simulated ExpantaNum class
                 class SimulatedExpantaNum {
                     constructor(value) {
+                        this.array = [0, 0, 0];
+                        this.sign = 1;
+                        this.layer = 0;
+                        
                         if (value instanceof SimulatedExpantaNum) {
                             this.array = [...value.array];
                             this.sign = value.sign;
@@ -1175,10 +1179,6 @@
                             this.parseString(value);
                         } else if (typeof value === 'number') {
                             this.fromNumber(value);
-                        } else {
-                            this.array = [0, 0, 0];
-                            this.sign = 1;
-                            this.layer = 0;
                         }
                     }
                     
@@ -1186,12 +1186,13 @@
                         this.sign = Math.sign(n) || 1;
                         n = Math.abs(n);
                         this.layer = 0;
-                        this.array = [0, 0, 0];
                         
                         if (n === 0) {
                             this.array = [0, 0, 0];
+                        } else if (n === Infinity) {
+                            this.array = [1e308, 1, 0];
                         } else if (n < 1e308) {
-                            this.array = [Math.log10(n), 0, 0];
+                            this.array = [Math.log10(Math.max(1e-308, n)), 0, 0];
                         } else {
                             this.array = [308, 1, 0];
                         }
@@ -1202,58 +1203,46 @@
                         this.layer = 0;
                         this.array = [0, 0, 0];
                         
-                        if (str.includes('J{')) {
-                            const match = str.match(/J\{([^}]+)\}/);
-                            if (match) {
-                                const arrows = parseFloat(match[1]);
-                                this.array = [arrows, arrows > 10 ? 2 : 1, 0];
-                                this.layer = Math.floor(Math.log10(Math.max(1, arrows)));
+                        try {
+                            if (str.includes('J{') && str.includes('}')) {
+                                const match = str.match(/J\{([^}]+)\}/);
+                                if (match) {
+                                    const arrows = parseFloat(match[1]) || 0;
+                                    this.array = [Math.log10(Math.max(1, arrows)), arrows > 10 ? 2 : 1, 0];
+                                    this.layer = Math.floor(Math.log10(Math.max(1, arrows)));
+                                }
+                            } else if (str.includes('J^')) {
+                                const match = str.match(/J\^(\d+)\s+(\d+)/);
+                                if (match) {
+                                    const power = parseFloat(match[1]) || 1;
+                                    const modifier = parseFloat(match[2]) || 1;
+                                    this.array = [modifier, power, 2];
+                                    this.layer = power;
+                                }
+                            } else if (str.includes('e')) {
+                                const parts = str.split('e');
+                                const mantissa = parseFloat(parts[0]) || 1;
+                                const exponent = parseFloat(parts[1]) || 0;
+                                this.array = [exponent + Math.log10(Math.abs(mantissa)), 0, 0];
+                                if (exponent > 308) {
+                                    this.array[1] = Math.floor(exponent / 308);
+                                }
+                            } else {
+                                this.fromNumber(parseFloat(str) || 0);
                             }
-                        } else if (str.includes('J^')) {
-                            const match = str.match(/J\^(\d+)\s+(\d+)/);
-                            if (match) {
-                                const power = parseFloat(match[1]);
-                                const modifier = parseFloat(match[2]);
-                                this.array = [modifier, power, 2];
-                                this.layer = power;
-                            }
-                        } else if (str.includes('e')) {
-                            const parts = str.split('e');
-                            const mantissa = parseFloat(parts[0]) || 1;
-                            const exponent = parseFloat(parts[1]) || 0;
-                            this.array = [exponent + Math.log10(Math.abs(mantissa)), 0, 0];
-                            if (exponent > 308) {
-                                this.array[1] = Math.floor(exponent / 308);
-                            }
-                        } else {
-                            this.fromNumber(parseFloat(str) || 0);
+                        } catch(e) {
+                            this.fromNumber(0);
                         }
-                    }
-                    
-                    static fromComponents(sign, layer, array) {
-                        const result = new SimulatedExpantaNum(0);
-                        result.sign = sign;
-                        result.layer = layer;
-                        result.array = [...array];
-                        return result;
-                    }
-                    
-                    static fromString(str) {
-                        return new SimulatedExpantaNum(str);
-                    }
-                    
-                    static fromNumber(n) {
-                        return new SimulatedExpantaNum(n);
                     }
                     
                     static tetr(base, height) {
                         const result = new SimulatedExpantaNum(0);
-                        const h = new SimulatedExpantaNum(height);
+                        const h = typeof height === 'number' ? height : height.toNumber();
                         
-                        if (h.array[0] < 5) {
-                            result.array = [Math.pow(10, h.array[0]), 0, 0];
+                        if (h < 5) {
+                            result.array = [h * 10, 0, 0];
                         } else {
-                            result.array = [h.array[0], 1, 0];
+                            result.array = [h, 1, 0];
                             result.layer = 1;
                         }
                         return result;
@@ -1261,46 +1250,63 @@
                     
                     static pent(base, height) {
                         const result = new SimulatedExpantaNum(0);
-                        const h = new SimulatedExpantaNum(height);
+                        const h = typeof height === 'number' ? height : height.toNumber();
                         
-                        result.array = [h.array[0], 2, 0];
+                        result.array = [h, 2, 0];
                         result.layer = 2;
                         return result;
                     }
                     
                     static arrow(base, arrows, height, sets = 1) {
                         const result = new SimulatedExpantaNum(0);
-                        const a = new SimulatedExpantaNum(arrows);
-                        const h = new SimulatedExpantaNum(height);
-                        const s = new SimulatedExpantaNum(sets);
+                        const a = typeof arrows === 'number' ? arrows : arrows.toNumber();
+                        const h = typeof height === 'number' ? height : height.toNumber();
+                        const s = typeof sets === 'number' ? sets : sets.toNumber();
                         
-                        const effectiveHeight = h.mul(s);
+                        // Prevent NaN and Infinity
+                        const safeArrows = Math.min(Math.max(1, a), 1e10);
+                        const safeHeight = Math.min(Math.max(1, h), 1e10);
+                        const safeSets = Math.min(Math.max(1, s), 1000);
+                        
                         result.array = [
-                            effectiveHeight.array[0],
-                            Math.min(a.array[0], 1e10),
-                            s.array[0]
+                            Math.log10(safeHeight * safeSets),
+                            Math.log10(safeArrows),
+                            Math.log10(safeSets)
                         ];
-                        result.layer = Math.floor(Math.log10(Math.max(1, a.array[0])));
+                        result.layer = Math.floor(Math.log10(Math.max(1, safeArrows)));
                         return result;
                     }
                     
+                    toNumber() {
+                        if (this.array[1] > 0 || this.array[2] > 0) {
+                            return Infinity;
+                        }
+                        const val = Math.pow(10, this.array[0]);
+                        return isFinite(val) ? val : 1e308;
+                    }
+                    
                     add(other) {
-                        const o = new SimulatedExpantaNum(other);
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
                         const result = new SimulatedExpantaNum(this);
                         
-                        if (this.array[1] === 0 && o.array[1] === 0 && this.array[0] < 308 && o.array[0] < 308) {
-                            result.array[0] = Math.log10(Math.pow(10, this.array[0]) + Math.pow(10, o.array[0]));
+                        if (this.array[1] === 0 && o.array[1] === 0) {
+                            const thisVal = Math.pow(10, this.array[0]);
+                            const otherVal = Math.pow(10, o.array[0]);
+                            if (isFinite(thisVal) && isFinite(otherVal)) {
+                                result.array[0] = Math.log10(thisVal + otherVal);
+                            }
                         }
                         return result;
                     }
                     
                     mul(other) {
-                        const o = new SimulatedExpantaNum(other);
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
                         const result = new SimulatedExpantaNum(this);
                         
                         result.array[0] += o.array[0];
                         result.array[1] += o.array[1];
                         
+                        // Normalize
                         while (result.array[0] > 308) {
                             result.array[0] -= 308;
                             result.array[1]++;
@@ -1310,11 +1316,12 @@
                     }
                     
                     pow(other) {
-                        const o = new SimulatedExpantaNum(other);
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
                         const result = new SimulatedExpantaNum(this);
                         
-                        if (o.array[1] === 0 && o.array[0] < 10) {
-                            result.array[0] *= Math.pow(10, o.array[0]);
+                        const exp = o.toNumber();
+                        if (isFinite(exp) && exp < 10) {
+                            result.array[0] *= exp;
                         } else {
                             result.array[1] += o.array[0];
                             result.layer++;
@@ -1328,7 +1335,7 @@
                     }
                     
                     gt(other) {
-                        const o = new SimulatedExpantaNum(other);
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
                         
                         if (this.layer !== o.layer) return this.layer > o.layer;
                         if (this.array[2] !== o.array[2]) return this.array[2] > o.array[2];
@@ -1341,66 +1348,74 @@
                     }
                     
                     lt(other) {
-                        return new SimulatedExpantaNum(other).gt(this);
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
+                        return o.gt(this);
                     }
                     
                     lte(other) {
-                        return new SimulatedExpantaNum(other).gte(this);
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
+                        return o.gte(this);
                     }
                     
                     eq(other) {
-                        const o = new SimulatedExpantaNum(other);
-                        return this.layer === o.layer && 
-                               this.array[0] === o.array[0] && 
-                               this.array[1] === o.array[1] && 
-                               this.array[2] === o.array[2];
+                        const o = other instanceof SimulatedExpantaNum ? other : new SimulatedExpantaNum(other);
+                        return Math.abs(this.layer - o.layer) < 0.001 && 
+                               Math.abs(this.array[0] - o.array[0]) < 0.001 && 
+                               Math.abs(this.array[1] - o.array[1]) < 0.001 && 
+                               Math.abs(this.array[2] - o.array[2]) < 0.001;
                     }
                     
                     toString() {
-                        if (this.array[2] === 2 && this.layer > 0) {
-                            return `J^${this.layer} ${Math.floor(this.array[0])}`;
-                        } else if (this.layer > 2) {
-                            return `10{${this.layer}}${Math.floor(this.array[0])}`;
-                        } else if (this.array[1] > 10) {
-                            return `10^^${this.array[1]}`;
-                        } else if (this.array[1] > 0) {
-                            return `e${this.array[0].toExponential(2)}`;
-                        } else if (this.array[0] < 6) {
-                            return Math.pow(10, this.array[0]).toExponential(2);
-                        } else {
-                            return `e${this.array[0].toExponential(2)}`;
+                        try {
+                            if (this.array[2] === 2 && this.layer > 0) {
+                                return `J^${Math.floor(this.layer)} ${Math.floor(this.array[0])}`;
+                            } else if (this.layer > 2) {
+                                return `10{${Math.floor(this.layer)}}${Math.floor(this.array[0])}`;
+                            } else if (this.array[1] > 10) {
+                                return `10^^${Math.floor(this.array[1])}`;
+                            } else if (this.array[1] > 0) {
+                                return `10^^${this.array[1].toFixed(2)}^^${this.array[0].toFixed(2)}`;
+                            } else if (this.array[0] > 6) {
+                                return `e${this.array[0].toExponential(2)}`;
+                            } else {
+                                const val = Math.pow(10, this.array[0]);
+                                return isFinite(val) ? val.toExponential(2) : 'Infinity';
+                            }
+                        } catch(e) {
+                            return 'Error';
                         }
                     }
                     
                     toJ() {
-                        if (this.array[2] === 2 && this.layer > 0) {
-                            return `J^${this.layer} ${Math.floor(this.array[0])}`;
-                        } else if (this.array[1] > 0 || this.layer > 0) {
-                            const arrows = Math.max(this.array[1], Math.pow(10, this.layer));
-                            return `J{${arrows.toExponential(2)}}`;
+                        try {
+                            if (this.array[2] === 2 && this.layer > 0) {
+                                return `J^${Math.floor(this.layer)} ${Math.floor(this.array[0])}`;
+                            } else if (this.array[1] > 0 || this.layer > 0) {
+                                const arrows = Math.max(this.array[1], Math.pow(10, this.layer));
+                                return `J{${arrows.toExponential(2)}}`;
+                            }
+                            return this.toString();
+                        } catch(e) {
+                            return 'J{Error}';
                         }
-                        return this.toString();
                     }
                 }
                 
                 // Assign simulated class
-                ExpantaNumLib = SimulatedExpantaNum;
+                EN = SimulatedExpantaNum;
             }
         }
 
         // Check library on load
         checkLibrary();
 
-        // Use the appropriate ExpantaNum (loaded or simulated)
-        const EN = ExpantaNumLib || ExpantaNum;
-
         // Global variables with ExpantaNum
-        let currentNumber = new EN(3);
-        let iterations = new EN(0);
-        let arrowCount = new EN(0);
-        let arrowMultiplier = new EN(1);
-        let notationSets = new EN(1);
-        let arrowPower = new EN(1);
+        let currentNumber;
+        let iterations;
+        let arrowCount;
+        let arrowMultiplier;
+        let notationSets;
+        let arrowPower;
         let stage = 'exponential';
         let stageProgress = 0;
         let growthSpeed = 100;
@@ -1414,57 +1429,34 @@
         let isRunning = false;
         let animationId = null;
 
-        // Extended approximations including J^x m notation
-        const approximations = [
+        // Initialize ExpantaNum variables
+        function initializeNumbers() {
+            currentNumber = new EN(startingNumber);
+            iterations = new EN(0);
+            arrowCount = new EN(0);
+            arrowMultiplier = new EN(1);
+            notationSets = new EN(1);
+            arrowPower = new EN(1);
+        }
+
+        // Extended approximations
+        const getApproximations = () => [
             { threshold: new EN('1e10'), format: (n) => `10^10 (Ten Billion)` },
-            { threshold: new EN('1e15'), format: (n) => `10{{1}}9e15` },
-            { threshold: new EN('1e20'), format: (n) => `10^^3.5` },
-            { threshold: new EN('1e30'), format: (n) => `10{{1}}10^30` },
-            { threshold: new EN('1e40'), format: (n) => `10^^^2.5` },
-            { threshold: new EN('1e50'), format: (n) => `10{{2}}50` },
-            { threshold: new EN('1e60'), format: (n) => `10^^10^^2` },
-            { threshold: new EN('1e70'), format: (n) => `10{{2}}10^70` },
-            { threshold: new EN('1e80'), format: (n) => `10^^^^2` },
-            { threshold: new EN('1e90'), format: (n) => `10{{3}}90` },
             { threshold: new EN('1e100'), format: (n) => `Googol = 10^100` },
-            { threshold: new EN('1e120'), format: (n) => `10{{3}}10^120` },
-            { threshold: new EN('1e150'), format: (n) => `10{4}3` },
-            { threshold: new EN('1e200'), format: (n) => `10{{4}}200` },
-            { threshold: new EN('1e300'), format: (n) => `10^^^3 territory` },
-            { threshold: new EN('1e500'), format: (n) => `10{5}2.5` },
             { threshold: new EN('1e1000'), format: (n) => `10^^10^^10` },
-            { threshold: new EN('1e3003'), format: (n) => `Googolplex = 10^10^100` },
-            { threshold: new EN('1e5000'), format: (n) => `10{6}2` },
-            { threshold: new EN('1e10000'), format: (n) => `10{{5}}10000` },
             { threshold: EN.tetr(10, 5), format: (n) => `10^^^4 realm` },
-            { threshold: EN.tetr(10, 6), format: (n) => `10{7}2` },
-            { threshold: EN.tetr(10, 7), format: (n) => `10^^^^3` },
-            { threshold: EN.tetr(10, 10), format: (n) => `10{10}2` },
-            { threshold: EN.pent(10, 3), format: (n) => `10^^^^^2` },
             { threshold: EN.arrow(10, 10, 10), format: (n) => `10→10→10` },
-            { threshold: EN.arrow(10, 100, 10), format: (n) => `10→→100` },
-            { threshold: EN.arrow(10, 1000, 10), format: (n) => `10→→→10` },
-            { threshold: EN.arrow(10, 10000, 10), format: (n) => `Graham's Number vicinity` },
             { threshold: new EN('J{1e10}'), format: (n) => `Beyond Graham's Number` },
-            { threshold: new EN('J{1e20}'), format: (n) => `TREE(3) territory` },
-            { threshold: new EN('J{1e30}'), format: (n) => `SCG(13) realm` },
             { threshold: new EN('J{1e33}'), format: (n) => `Omnioperation threshold` },
-            { threshold: new EN('J^2 100'), format: (n) => `J^2 100 (squared J notation)` },
-            { threshold: new EN('J^3 100'), format: (n) => `J^3 100 (cubed J notation)` },
-            { threshold: new EN('J^10 100'), format: (n) => `J^10 100 (10th power J)` },
-            { threshold: new EN('J{1e50}'), format: (n) => `Loader's Number vicinity` },
-            { threshold: new EN('J{1e100}'), format: (n) => `Rayo's Number approach` }
+            { threshold: new EN('J^2 100'), format: (n) => `J^2 100 (squared J notation)` }
         ];
 
         // Theme management
         function setTheme(themeName) {
             const body = document.body;
-            // Remove all theme classes
             body.className = body.className.replace(/theme-[\w-]+/g, '');
-            // Keep font class
             const fontClass = body.className.match(/font-[\w-]+/);
             body.className = fontClass ? fontClass[0] : 'font-orbitron';
-            // Add new theme
             if (themeName) {
                 body.classList.add(themeName);
             }
@@ -1474,9 +1466,7 @@
 
         function setFont(fontName) {
             const body = document.body;
-            // Remove all font classes
             body.className = body.className.replace(/font-[\w-]+/g, '');
-            // Add new font class
             body.classList.add(fontName);
             currentFont = fontName;
             localStorage.setItem('selectedFont', fontName);
@@ -1503,24 +1493,16 @@
             maxNotationSets = parseInt(document.getElementById('maxSets').value) || 10;
             limitSets = document.getElementById('limitSetsToggle').checked;
             showApproximations = document.getElementById('showApproximations').checked;
-            currentNumber = new EN(startingNumber);
-            iterations = new EN(0);
-            arrowCount = new EN(0);
-            arrowMultiplier = new EN(1);
-            notationSets = new EN(1);
-            arrowPower = new EN(1);
+            
+            initializeNumbers();
+            
             growthSpeed = parseInt(document.getElementById('speedControl').value);
             autoScroll = document.getElementById('autoScroll').value === 'on';
             
-            // Load saved theme and font
             const savedTheme = localStorage.getItem('selectedTheme');
             const savedFont = localStorage.getItem('selectedFont');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            }
-            if (savedFont) {
-                setFont(savedFont);
-            }
+            if (savedTheme) setTheme(savedTheme);
+            if (savedFont) setFont(savedFont);
             
             addHistoryEntry(`Initialized with value: ${startingNumber}`);
         }
@@ -1529,9 +1511,14 @@
         function getApproximation(number) {
             if (!showApproximations) return null;
             
+            const approximations = getApproximations();
             for (let i = approximations.length - 1; i >= 0; i--) {
-                if (number.gte(approximations[i].threshold)) {
-                    return approximations[i].format(number);
+                try {
+                    if (number.gte(approximations[i].threshold)) {
+                        return approximations[i].format(number);
+                    }
+                } catch(e) {
+                    continue;
                 }
             }
             
@@ -1557,90 +1544,82 @@
 
         // Update display
         function updateDisplay() {
-            const display = document.getElementById('display');
-            const simplifiedEl = document.getElementById('simplifiedNotation');
-            const approximationEl = document.getElementById('approximation');
-            const approximationContainer = document.getElementById('approximationContainer');
-            const notationSetsEl = document.getElementById('notationSets');
-            const notationCounterEl = document.getElementById('notationCounter');
-            const stageEl = document.getElementById('stage');
-            const iterEl = document.getElementById('iterations');
-            const growthEl = document.getElementById('growthRate');
-            const arrowsEl = document.getElementById('arrows');
-            const multiplierEl = document.getElementById('arrowMultiplier');
-            const totalSetsEl = document.getElementById('totalSets');
-            const arrowPowerEl = document.getElementById('arrowPower');
-            const stageInfoEl = document.getElementById('stageInfo');
-            const progressEl = document.getElementById('progress');
-            
-            // Format display
-            let displayText = currentNumber.toString();
-            let simplifiedText = displayText;
-            
-            // Handle approximations
-            if (showApproximations) {
-                const approx = getApproximation(currentNumber);
-                if (approx) {
-                    approximationEl.textContent = approx;
+            try {
+                const display = document.getElementById('display');
+                const simplifiedEl = document.getElementById('simplifiedNotation');
+                const approximationEl = document.getElementById('approximation');
+                const approximationContainer = document.getElementById('approximationContainer');
+                const stageEl = document.getElementById('stage');
+                const iterEl = document.getElementById('iterations');
+                const growthEl = document.getElementById('growthRate');
+                const arrowsEl = document.getElementById('arrows');
+                const multiplierEl = document.getElementById('arrowMultiplier');
+                const totalSetsEl = document.getElementById('totalSets');
+                const arrowPowerEl = document.getElementById('arrowPower');
+                const stageInfoEl = document.getElementById('stageInfo');
+                const progressEl = document.getElementById('progress');
+                
+                // Format display
+                let displayText = currentNumber.toString();
+                let simplifiedText = displayText;
+                
+                // Handle approximations
+                if (showApproximations) {
+                    const approx = getApproximation(currentNumber);
+                    if (approx) {
+                        approximationEl.textContent = approx;
+                    } else {
+                        approximationEl.textContent = displayText;
+                    }
                     approximationContainer.style.display = 'block';
                 } else {
-                    approximationEl.textContent = displayText;
-                    approximationContainer.style.display = 'block';
+                    approximationContainer.style.display = 'none';
                 }
-            } else {
-                approximationContainer.style.display = 'none';
-            }
-            
-            // Stage-specific formatting
-            if (stage === 'hyperoperational' || stage === 'transoperational' || stage === 'omnioperation') {
-                const effectiveArrows = arrowCount.mul(arrowMultiplier);
                 
-                if (stage === 'omnioperation') {
-                    const poweredArrows = effectiveArrows.pow(arrowPower);
+                // Stage-specific formatting
+                if (stage === 'hyperoperational' || stage === 'transoperational' || stage === 'omnioperation') {
                     simplifiedText = currentNumber.toJ();
-                    arrowsEl.textContent = poweredArrows.toString();
+                    arrowsEl.textContent = arrowCount.toString();
+                    totalSetsEl.textContent = notationSets.toString();
                 } else {
-                    simplifiedText = currentNumber.toJ();
-                    arrowsEl.textContent = effectiveArrows.toString();
+                    arrowsEl.textContent = 'N/A';
+                    totalSetsEl.textContent = '0';
                 }
                 
-                totalSetsEl.textContent = notationSets.toString();
-            } else {
-                arrowsEl.textContent = 'N/A';
-                totalSetsEl.textContent = '0';
-            }
-            
-            // Update stage text
-            let stageText = stage.charAt(0).toUpperCase() + stage.slice(1);
-            stageEl.textContent = `Stage: ${stageText}`;
-            
-            // Update stage info
-            const stageMessages = {
-                exponential: 'Growing exponentially...',
-                tetrational: 'Power towers rising...',
-                pentrational: 'Hyper-towers ascending...',
-                hyperoperational: 'Arrow notation expanding...',
-                transoperational: `Transcending with ${notationSets.toString()} notation sets...`,
-                omnioperation: `Omnioperation: arrows^${arrowPower.toString()}`
-            };
-            stageInfoEl.textContent = stageMessages[stage] || 'Computing...';
-            
-            // Update displays
-            display.textContent = displayText;
-            simplifiedEl.textContent = simplifiedText;
-            
-            // Update stats with ExpantaNum values
-            iterEl.textContent = iterations.toString();
-            growthEl.textContent = stageText;
-            multiplierEl.textContent = `×${arrowMultiplier.toString()}`;
-            arrowPowerEl.textContent = `^${arrowPower.toString()}`;
-            
-            // Update progress
-            progressEl.style.width = `${Math.min(stageProgress, 100)}%`;
-            
-            // Auto scroll display if needed
-            if (autoScroll && display.scrollWidth > display.clientWidth) {
-                display.scrollLeft = display.scrollWidth;
+                // Update stage text
+                let stageText = stage.charAt(0).toUpperCase() + stage.slice(1);
+                stageEl.textContent = `Stage: ${stageText}`;
+                
+                // Update stage info
+                const stageMessages = {
+                    exponential: 'Growing exponentially...',
+                    tetrational: 'Power towers rising...',
+                    pentrational: 'Hyper-towers ascending...',
+                    hyperoperational: 'Arrow notation expanding...',
+                    transoperational: `Transcending with ${notationSets.toString()} notation sets...`,
+                    omnioperation: `Omnioperation: arrows^${arrowPower.toString()}`
+                };
+                stageInfoEl.textContent = stageMessages[stage] || 'Computing...';
+                
+                // Update displays
+                display.textContent = displayText;
+                simplifiedEl.textContent = simplifiedText;
+                
+                // Update stats
+                iterEl.textContent = iterations.toString();
+                growthEl.textContent = stageText;
+                multiplierEl.textContent = `×${arrowMultiplier.toString()}`;
+                arrowPowerEl.textContent = `^${arrowPower.toString()}`;
+                
+                // Update progress
+                progressEl.style.width = `${Math.min(stageProgress, 100)}%`;
+                
+                // Auto scroll display if needed
+                if (autoScroll && display.scrollWidth > display.clientWidth) {
+                    display.scrollLeft = display.scrollWidth;
+                }
+            } catch(e) {
+                console.error('Display update error:', e);
             }
         }
 
@@ -1648,101 +1627,110 @@
         function grow() {
             if (!isRunning) return;
             
-            iterations = iterations.add(new EN(1));
-            stageProgress = (iterations.array[0] % 100);
-            
-            switch(stage) {
-                case 'exponential':
-                    currentNumber = new EN(startingNumber).pow(iterations);
-                    
-                    if (iterations.gt(new EN(33))) {
-                        stage = 'tetrational';
-                        addHistoryEntry('Entering Tetrational Stage');
-                        currentNumber = new EN('1e33');
-                    }
-                    break;
-                    
-                case 'tetrational':
-                    const tetrHeight = iterations.add(new EN(-33)).mul(new EN(0.1));
-                    currentNumber = EN.tetr(10, new EN(33).add(tetrHeight).array[0]);
-                    
-                    if (iterations.gt(new EN(100))) {
-                        stage = 'pentrational';
-                        addHistoryEntry('Entering Pentrational Stage');
-                    }
-                    break;
-                    
-                case 'pentrational':
-                    const pentHeight = iterations.add(new EN(-100)).mul(new EN(0.05));
-                    currentNumber = EN.pent(10, new EN(10000).add(pentHeight).array[0]);
-                    
-                    if (iterations.gt(new EN(200))) {
-                        stage = 'hyperoperational';
-                        arrowCount = new EN(10);
-                        addHistoryEntry('Entering Hyperoperational Stage');
-                    }
-                    break;
-                    
-                case 'hyperoperational':
-                    arrowCount = new EN(10).mul(
-                        new EN(1.1).pow(iterations.add(new EN(-200)).mul(new EN(0.1)))
-                    );
-                    const hyperHeight = iterations.add(new EN(-200));
-                    currentNumber = EN.arrow(10, arrowCount.mul(arrowMultiplier).array[0], hyperHeight.array[0]);
-                    
-                    if (iterations.gt(new EN(300))) {
-                        stage = 'transoperational';
-                        addHistoryEntry('Entering Transoperational Stage');
-                    }
-                    break;
-                    
-                case 'transoperational':
-                    arrowCount = new EN(10).mul(
-                        new EN(1.2).pow(iterations.add(new EN(-300)).mul(new EN(0.15)))
-                    );
-                    arrowMultiplier = new EN(2).pow(iterations.add(new EN(-300)).mul(new EN(0.05)));
-                    notationSets = new EN(1).add(iterations.add(new EN(-300)).mul(new EN(0.1)));
-                    
-                    const transHeight = iterations.add(new EN(-300));
-                    const totalArrows = arrowCount.mul(arrowMultiplier);
-                    currentNumber = EN.arrow(10, totalArrows.array[0], transHeight.mul(notationSets).array[0], notationSets.array[0]);
-                    
-                    // Check for omnioperation transition at J{1e33}
-                    if (totalArrows.gte(new EN('1e33'))) {
-                        stage = 'omnioperation';
-                        arrowPower = new EN(2);
-                        addHistoryEntry('ENTERING OMNIOPERATION STAGE! Arrows will be squared!');
-                    }
-                    break;
-                    
-                case 'omnioperation':
-                    // Omnioperation: square the arrows after J{1e33}
-                    const omniIterations = iterations.add(new EN(-400));
-                    arrowCount = new EN('1e33').mul(
-                        new EN(1.5).pow(omniIterations.mul(new EN(0.1)))
-                    );
-                    
-                    // Increase arrow power gradually
-                    arrowPower = new EN(2).add(omniIterations.mul(new EN(0.01)));
-                    
-                    // Apply the squared (or higher power) arrows
-                    const omniArrows = arrowCount.pow(arrowPower);
-                    const omniHeight = omniIterations.mul(new EN(2));
-                    
-                    // Use J^x m notation for extreme values
-                    if (arrowPower.gt(new EN(10))) {
-                        currentNumber = new EN(`J^${arrowPower.array[0]} ${omniHeight.array[0]}`);
-                    } else {
-                        currentNumber = EN.arrow(10, omniArrows.array[0], omniHeight.array[0]);
-                    }
-                    
-                    if (omniIterations.array[0] % 50 === 0 && omniIterations.gt(new EN(0))) {
-                        addHistoryEntry(`Omnioperation: Arrows raised to power ${arrowPower.toString()}`);
-                    }
-                    break;
+            try {
+                iterations = iterations.add(new EN(1));
+                const iterNum = iterations.toNumber ? iterations.toNumber() : parseFloat(iterations.toString()) || 0;
+                stageProgress = (iterNum % 100);
+                
+                switch(stage) {
+                    case 'exponential':
+                        currentNumber = new EN(startingNumber).pow(iterations);
+                        
+                        if (iterations.gt(new EN(33))) {
+                            stage = 'tetrational';
+                            addHistoryEntry('Entering Tetrational Stage');
+                            currentNumber = new EN('1e33');
+                        }
+                        break;
+                        
+                    case 'tetrational':
+                        const tetrIter = Math.max(0, iterNum - 33);
+                        const tetrHeight = 33 + tetrIter * 0.1;
+                        currentNumber = EN.tetr(10, tetrHeight);
+                        
+                        if (iterations.gt(new EN(100))) {
+                            stage = 'pentrational';
+                            addHistoryEntry('Entering Pentrational Stage');
+                        }
+                        break;
+                        
+                    case 'pentrational':
+                        const pentIter = Math.max(0, iterNum - 100);
+                        const pentHeight = 10000 + pentIter * 0.05;
+                        currentNumber = EN.pent(10, pentHeight);
+                        
+                        if (iterations.gt(new EN(200))) {
+                            stage = 'hyperoperational';
+                            arrowCount = new EN(10);
+                            addHistoryEntry('Entering Hyperoperational Stage');
+                        }
+                        break;
+                        
+                    case 'hyperoperational':
+                        const hyperIter = Math.max(0, iterNum - 200);
+                        const arrowGrowth = Math.pow(1.1, hyperIter * 0.1);
+                        arrowCount = new EN(10 * arrowGrowth);
+                        
+                        const arrowValue = arrowCount.toNumber ? arrowCount.toNumber() : 10;
+                        const effectiveArrows = arrowValue * (arrowMultiplier.toNumber ? arrowMultiplier.toNumber() : 1);
+                        currentNumber = EN.arrow(10, effectiveArrows, hyperIter);
+                        
+                        if (iterations.gt(new EN(300))) {
+                            stage = 'transoperational';
+                            addHistoryEntry('Entering Transoperational Stage');
+                        }
+                        break;
+                        
+                    case 'transoperational':
+                        const transIter = Math.max(0, iterNum - 300);
+                        const transGrowth = Math.pow(1.2, transIter * 0.15);
+                        arrowCount = new EN(10 * transGrowth);
+                        arrowMultiplier = new EN(Math.pow(2, transIter * 0.05));
+                        notationSets = new EN(1 + transIter * 0.1);
+                        
+                        const transArrows = (arrowCount.toNumber ? arrowCount.toNumber() : 10) * 
+                                          (arrowMultiplier.toNumber ? arrowMultiplier.toNumber() : 1);
+                        const transSets = notationSets.toNumber ? notationSets.toNumber() : 1;
+                        currentNumber = EN.arrow(10, transArrows, transIter * transSets, transSets);
+                        
+                        // Check for omnioperation
+                        if (arrowCount.gt(new EN('1e33'))) {
+                            stage = 'omnioperation';
+                            arrowPower = new EN(2);
+                            addHistoryEntry('ENTERING OMNIOPERATION STAGE! Arrows will be squared!');
+                        }
+                        break;
+                        
+                    case 'omnioperation':
+                        const omniIter = Math.max(0, iterNum - 400);
+                        const omniGrowth = Math.pow(1.5, omniIter * 0.1);
+                        arrowCount = new EN('1e33').mul(new EN(omniGrowth));
+                        arrowPower = new EN(2 + omniIter * 0.01);
+                        
+                        const powerValue = arrowPower.toNumber ? arrowPower.toNumber() : 2;
+                        const omniArrows = arrowCount.pow(new EN(powerValue));
+                        const omniArrowValue = omniArrows.toNumber ? omniArrows.toNumber() : 1e33;
+                        
+                        if (powerValue > 10) {
+                            currentNumber = new EN(`J^${Math.floor(powerValue)} ${omniIter * 2}`);
+                        } else {
+                            currentNumber = EN.arrow(10, Math.min(omniArrowValue, 1e100), omniIter * 2);
+                        }
+                        
+                        if (omniIter % 50 === 0 && omniIter > 0) {
+                            addHistoryEntry(`Omnioperation: Arrows raised to power ${arrowPower.toString()}`);
+                        }
+                        break;
+                }
+                
+                updateDisplay();
+                
+            } catch(e) {
+                console.error('Growth error:', e);
+                // Fallback to prevent complete failure
+                currentNumber = new EN(`J{${iterations.toString()}}`);
+                updateDisplay();
             }
-            
-            updateDisplay();
             
             // Continue animation with adjustable speed
             animationId = setTimeout(() => {
@@ -1770,11 +1758,6 @@
         function reset() {
             pause();
             stage = 'exponential';
-            iterations = new EN(0);
-            arrowCount = new EN(0);
-            arrowMultiplier = new EN(1);
-            notationSets = new EN(1);
-            arrowPower = new EN(1);
             stageProgress = 0;
             document.getElementById('history').innerHTML = '';
             document.getElementById('startBtn').textContent = 'Start Growth';
@@ -1800,6 +1783,8 @@
                     arrowCount = new EN('1e33');
                     arrowPower = new EN(2);
                 }
+                
+                updateDisplay();
             }
         }
 
@@ -1851,4 +1836,4 @@
         updateDisplay();
     </script>
 </body>
-    </html>
+</html>
